@@ -1,0 +1,278 @@
+{/* <InputLabel id="demo-simple-select-label">Candidatos: </InputLabel>
+                                    <Select
+                                        onChange={handleInputChange2}
+                                        labelId="demo-simple-select-label"
+                                        id="demo-simple-select"
+                                        label="Candidatos"
+                                        value={candi_id}
+                                    >
+                                        {
+                                            candidatos.map(
+                                                candidato =>
+                                                    <MenuItem key={candidato.id} value={candidato.id} > {candidato.nombre} {candidato.apellido1}, {candidato.sexo}</MenuItem>
+                                            )
+                                        }
+
+                                    </Select> */}
+
+
+                                {/* <Button onClick={handleClickOpen}>
+                                        <svg data-v-1f90038a="" viewBox="0 0 16 16" width="1em" height="1em" focusable="false" role="img" alt="icon" id="nueva-imputacion" xmlns="http://www.w3.org/2000/svg" fill="rgb(31, 17, 97)" className="bi-plus-square b-icon bi text-primary" style={{ height: 32, width: 32 }} >
+                                            <g data-v-1f90038a="">
+                                                <path fillRule="evenodd" d="M8 3.5a.5.5 0 01.5.5v4a.5.5 0 01-.5.5H4a.5.5 0 010-1h3.5V4a.5.5 0 01.5-.5z" clipRule="evenodd">
+                                                </path>
+                                                <path fillRule="evenodd" d="M7.5 8a.5.5 0 01.5-.5h4a.5.5 0 010 1H8.5V12a.5.5 0 01-1 0V8z" clipRule="evenodd">
+                                                </path>
+                                                <path fillRule="evenodd" d="M14 1H2a1 1 0 00-1 1v12a1 1 0 001 1h12a1 1 0 001-1V2a1 1 0 00-1-1zM2 0a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V2a2 2 0 00-2-2H2z" clipRule="evenodd">
+                                                </path>
+                                            </g>
+                                        </svg>
+                                    </Button> */}
+
+
+
+
+
+
+
+
+
+
+
+
+
+{candis.map((candidato) => {
+                                                    <TableRow key={candidato.id} >
+                                                        <TableCell>{candidato.nombre}</TableCell>
+                                                        <TableCell>{candidato.candidatos.apellido1}</TableCell>
+                                                        <TableCell>{candidato.candidatos.sexo}</TableCell>
+                                                        <TableCell>{candidato.entrevistado}</TableCell>
+                                                        <TableCell>
+                                                            <Button onClick={() => deleteCandidato(candidato.id)}  >
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="grey" className="bi-trash-fill b-icon bi text-dark" viewBox="0 0 16 16" >
+                                                                    <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z" />
+                                                                </svg>
+                                                            </Button>
+                                                        </TableCell>
+                                                    </TableRow>
+                                                })}
+
+
+
+
+
+
+                                                function handleSubmit() {
+        const candi = {
+            "nombre": candi_name,
+            "apellido1": candi_ape,
+            "sexo": candi_sexo
+        };
+        ValuesService.createCandidato(candi).then((response) => {
+        }).catch(error => {
+            console.log(error);
+        });
+        setOpen(false);
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+     {/* <Dialog open={open} onClose={handleClose}>
+                    <DialogTitle>Candidato</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            Candidato Nuevo
+                        </DialogContentText>
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            id="nombre"
+                            label="Nombre"
+                            type="text"
+                            fullWidth
+                            variant="standard"
+                            onChange={(e) => setCandName(e.target.value)}
+                        />
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            id="name"
+                            label="Apellido"
+                            type="text"
+                            fullWidth
+                            variant="standard"
+                            onChange={(e) => setCandApe(e.target.value)}
+
+                        />
+                        <RadioGroup
+                            aria-labelledby="demo-radio-buttons-group-label"
+                            defaultValue="female"
+                            name="radio-buttons-group"
+                        >
+                            <FormControlLabel onChange={(e) => setCandSex(e.target.value)} value="F" control={<Radio />} label="Mujer" />
+                            <FormControlLabel onChange={(e) => setCandSex(e.target.value)} value="M" control={<Radio />} label="Hombre" />
+                        </RadioGroup>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleClose}>Cancel</Button>
+                        <Button disabled={!((candi_name) && (candi_ape) && (candi_sexo))} onClick={handleSubmit}>Crear</Button>
+                    </DialogActions>
+                </Dialog> */}
+
+
+
+
+
+<Grid item xs={6}>
+                    <Paper  >
+                        <div style={{ height: 300 }}>
+                            <ResponsivePie
+
+                                data={data}
+                                margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
+                                innerRadius={0.5}
+                                padAngle={0.7}
+                                cornerRadius={3}
+                                activeOuterRadiusOffset={8}
+                                borderWidth={1}
+                                borderColor={{
+                                    from: 'color',
+                                    modifiers: [
+                                        [
+                                            'darker',
+                                            0.2
+                                        ]
+                                    ]
+                                }}
+                                colors={{ datum: 'data.color' }}
+                                arcLinkLabelsSkipAngle={10}
+                                arcLinkLabelsTextColor="#333333"
+                                arcLinkLabelsThickness={1}
+                                arcLinkLabelsColor={{ from: 'color' }}
+                                arcLabelsSkipAngle={10}
+                                arcLabelsTextColor={{
+                                    from: 'color',
+                                    modifiers: [
+                                        [
+                                            'darker',
+                                            2
+                                        ]
+                                    ]
+                                }}
+                                fill={[
+                                    {
+                                        match: {
+                                            id: 'hombres'
+                                        },
+                                        id: 'hombres'
+                                    },
+                                    {
+                                        match: {
+                                            id: 'mujeres'
+                                        },
+                                        id: 'mujeres'
+                                    }
+                                ]}
+                                legends={[
+                                    {
+                                        anchor: 'bottom',
+                                        direction: 'row',
+                                        justify: false,
+                                        translateX: 0,
+                                        translateY: 56,
+                                        itemsSpacing: 0,
+                                        itemWidth: 100,
+                                        itemHeight: 18,
+                                        itemTextColor: '#999',
+                                        itemDirection: 'left-to-right',
+                                        itemOpacity: 1,
+                                        symbolSize: 18,
+                                        symbolShape: 'circle',
+                                        effects: [
+                                            {
+                                                on: 'hover',
+                                                style: {
+                                                    itemTextColor: '#000'
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ]}
+                            />
+
+
+                        </div>
+                    </Paper>
+                </Grid>
+                <Grid item xs={6} >
+                    <Paper sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        textAlign: "center",
+                        verticalAlign: "middle",
+                        height: 300
+                    }}>
+                        <h1 style={{ fontSize: "7rem" }}>{percentil}%</h1>
+
+
+                    </Paper>
+                </Grid>
+
+
+
+
+                <Container>
+            <AppBar
+                position="static"
+                color="default"
+                style={{ background: '#ffffff' }}
+                elevation={0}
+                sx={{
+                    position: 'relative',
+                    borderBottom: (t) => `1px solid #1f1161`,
+                    mt: 1
+                }}
+            >
+                <Toolbar>
+                    <Typography variant="h6" color="inherit" sx={{ flexGrow: 1 }}>
+                        <img alt='logo' src={logo} width="180" />
+                    </Typography>
+                    <div >
+                        <Button
+                            id="basic-button"
+                            aria-controls={open ? 'basic-menu' : undefined}
+                            aria-haspopup="true"
+                            aria-expanded={open ? 'true' : undefined}
+                            onClick={handleClick}
+                        >
+                            <SettingsIcon />
+                        </Button>
+                        <Menu
+                            id="basic-menu"
+                            anchorEl={anchorEl}
+                            open={open}
+                            onClose={handleClose}
+                            MenuListProps={{
+                                'aria-labelledby': 'basic-button',
+                            }}
+                        >
+                            <MenuItem onClick={handleClose}>Profile</MenuItem>
+                            <MenuItem onClick={handleClose}>My account</MenuItem>
+                            <MenuItem onClick={handleClose}>Logout</MenuItem>
+                        </Menu>
+                    </div>
+                </Toolbar>
+            </AppBar>
+        </Container>
