@@ -1,77 +1,87 @@
 import axios from 'axios';
+import authHeader from './auth-header';
 
+const API_URL = "http://localhost:8090/api";
 
 class ValuesService {
 
     getAllDpto() {
-
-        return axios.get("http://localhost:8090/api/v1/dpto");
+        return axios.get(API_URL + "/v1/dpto", { headers: authHeader() });
     }
 
     getAllCt() {
-        return axios.get("http://localhost:8090/api/v1/centro-trabajo")
+        return axios.get(API_URL + "/v1/centro-trabajo", { headers: authHeader() })
     }
 
     getAllReclu() {
-        return axios.get("http://localhost:8090/api/v1/reclutador")
+        return axios.get(API_URL + "/v1/reclutador", { headers: authHeader() })
     }
 
     getAllVincus() {
-        return axios.get("http://localhost:8090/api/v1/vinculacion")
+        return axios.get(API_URL + "/v1/vinculacion", { headers: authHeader() })
     }
 
     getAllPuestos() {
-        return axios.get("http://localhost:8090/api/v1/puesto-trabajo")
+        return axios.get(API_URL + "/v1/puesto-trabajo", { headers: authHeader() })
     }
 
     getPuestoById(id) {
-        return axios.get("http://localhost:8090/api/v1/puesto-trabajo/" + id)
+        return axios.get(API_URL + "/v1/puesto-trabajo/" + id, { headers: authHeader() })
     }
 
     getAllTc() {
-        return axios.get("http://localhost:8090/api/v1/contratacion")
+        return axios.get(API_URL + "/v1/contratacion", { headers: authHeader() })
     }
 
     getAllJl() {
-        return axios.get("http://localhost:8090/api/v1/jornada-laboral")
+        return axios.get(API_URL + "/v1/jornada-laboral", { headers: authHeader() })
     }
 
     getAllCandidatos() {
-        return axios.get("http://localhost:8090/api/v1/candidatos")
+        return axios.get(API_URL + "/v1/candidatos", { headers: authHeader() })
     }
 
     getAllTa() {
-        return axios.get("http://localhost:8090/api/v1/titulacion-academica")
+        return axios.get(API_URL + "/v1/titulacion-academica", { headers: authHeader() })
     }
 
     getAllProcesoss() {
-        return axios.get("http://localhost:8090/api/v1/procesos")
+        return axios.get(API_URL + "/v1/procesos", { headers: authHeader() })
     }
 
     createCandidato(candidato) {
-        return axios.post("http://localhost:8090/api/v1/candidatos", candidato)
+        return axios.post(API_URL + "/v1/candidatos", candidato, { headers: authHeader() })
     }
 
     getCandidatoById(id) {
-        return axios.get("http://localhost:8090/api/v1/candidatos/" + id);
+        return axios.get(API_URL + "/v1/candidatos/" + id, { headers: authHeader() });
     }
 
-
-
     deleteProcesoCandidato(id) {
-        return axios.delete("http://localhost:8090/api/v1/pro_cand/" + id);
+        return axios.delete(API_URL + "/v1/pro_cand/" + id, { headers: authHeader() });
     }
 
     getProcesoCandidato() {
-        return axios.get("http://localhost:8090/api/v1/pro_cand");
+        return axios.get(API_URL + "/v1/pro_cand", { headers: authHeader() });
+    }
+    getProcesoCandidatobyId(id) {
+        return axios.get(API_URL + "/v1/pro_cand/" + id, { headers: authHeader() });
     }
 
     putProcesoCandidato(id, pro_cand) {
-        return axios.put("http://localhost:8090/api/v1/pro_cand/" + id, pro_cand)
+        return axios.put(API_URL + "/v1/pro_cand/" + id, pro_cand, { headers: authHeader() })
     }
 
     postProcesoCandidato(pro_cand) {
-        return axios.post("http://localhost:8090/api/v1/pro_cand", pro_cand);
+        return axios.post(API_URL + "/v1/pro_cand", pro_cand, { headers: authHeader() });
+    }
+
+    isAdmin() {
+        return axios.get(API_URL + "/v1/reclutador/validate", { headers: authHeader() })
+    }
+
+    getIdFromToken() {
+        return axios.get(API_URL + "/v1/reclutador/get-id", { headers: authHeader() })
     }
 
 

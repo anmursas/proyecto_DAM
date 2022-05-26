@@ -14,13 +14,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     ReclutadorRepository reclutadorRepository;
 
-
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Reclutador reclutador = reclutadorRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
+        Reclutador user = reclutadorRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
 
-        return UserDetailsImpl.build(reclutador);
+        return UserDetailsImpl.build(user);
     }
+
 }

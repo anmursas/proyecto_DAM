@@ -1,24 +1,21 @@
 package procesos.springboot.controller;
 
-import org.apache.tomcat.jni.Proc;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import procesos.springboot.exception.ResourceNotFoundException;
 import procesos.springboot.model.Candidatos;
-import procesos.springboot.model.CentroTrabajo;
 import procesos.springboot.model.Proceso;
 import procesos.springboot.repository.CandidatosRepository;
 import procesos.springboot.repository.ProcesoRepository;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/api/v1/candidatos")
-@CrossOrigin(origins = {"http://localhost:3000"})
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class CandidatosController {
 
     @Autowired
@@ -28,6 +25,7 @@ public class CandidatosController {
     private ProcesoRepository procesoRepository;
 
     @GetMapping
+    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public List<Candidatos> getAllCandidatos() {
         return candidatosRepository.findAll();
     }
@@ -51,9 +49,9 @@ public class CandidatosController {
     @DeleteMapping("{id}")
     public ResponseEntity<Proceso> deleteCandidato(@PathVariable Long id) {
 
-        System.out.println("BORRANDO CANDIDATO " + id);
-        Candidatos candidatos = candidatosRepository.findById(id).orElseThrow(() ->
+        candidatosRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException("No existe candidato con este ID: " + id));
+        candidatosRepository.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

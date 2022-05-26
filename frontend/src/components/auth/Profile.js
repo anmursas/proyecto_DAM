@@ -1,30 +1,52 @@
-import React from "react";
-import AuthService from "../../services/auth.service"
-
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import AuthService from "../../services/auth.service";
 
 const Profile = () => {
-    const currentUser = AuthService.getCurrentUser();
+    const [accessToken, setAccessToken] = useState("");
+    const [username, setUsername] = useState("");
+    const [email, setMail] = useState("");
+    const [id, setId] = useState("");
+    const [roles, setRoles] = useState([]);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const user = AuthService.getCurrentUser();
+        if (!user) {
+            navigate("/login");
+        } else {
+            setAccessToken(user.accessToken);
+            setUsername(user.username);
+            setMail(user.email);
+            setId(user.id);
+            setRoles(user.roles);
+
+            console.log("hay");
+        }
+    }, []);
 
     return (
-        <div>
-            <h3>{currentUser.username}</h3>
+        <div className="container">
+            <header className="jumbotron">
+                <h3>
+                    <strong>{username}</strong> Profile
+                </h3>
+            </header>
             <p>
-                Token: {currentUser.accessToken.substring(0, 20)} ...{" "}
-                {currentUser.accessToken.substr(currentUser.accessToken.length - 20)}
+                <strong>Token:</strong> {accessToken.substring(0, 20)} ...{" "}
+                {accessToken.substr(accessToken.length - 20)}
             </p>
-
             <p>
-                <strong>Id:</strong> {currentUser.id}
+                <strong>Id:</strong> {id}
             </p>
             <p>
-                <strong>Email:</strong> {currentUser.email}
+                <strong>Email:</strong> {email}
             </p>
             <strong>Authorities:</strong>
             <ul>
-                {currentUser.roles &&
-                    currentUser.roles.map((role, index) => <li key={index}>{role}</li>)}
+                {roles && roles.map((role, index) => <li key={index}>{role}</li>)}
             </ul>
         </div>
-    )
-}
+    );
+};
 export default Profile;

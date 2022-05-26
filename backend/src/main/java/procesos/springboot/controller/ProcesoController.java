@@ -1,8 +1,10 @@
 package procesos.springboot.controller;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import procesos.springboot.exception.ResourceNotFoundException;
 import procesos.springboot.model.Proceso;
@@ -10,16 +12,23 @@ import procesos.springboot.model.ProcesoCandidatos;
 import procesos.springboot.model.Reclutador;
 import procesos.springboot.model.Role;
 import procesos.springboot.repository.*;
+import procesos.springboot.security.jwt.JwtUtils;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/proceso")
-@CrossOrigin(origins = {"http://localhost:3000"})
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class ProcesoController {
 
+    @Autowired
+    JwtUtils jwtUtils;
     @Autowired
     private CandidatosRepository candidatosRepository;
 
@@ -54,25 +63,68 @@ public class ProcesoController {
     private ProcesoCandidatosReposotory procesoCandidatosReposotory;
 
     @GetMapping
-    public List<Proceso> getAllProceso() {
+    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public List<Proceso> getAllProceso(@NotNull HttpServletRequest request) throws IOException {
+        String user = request.getRemoteUser();
+        if (!(user == null)) {
+            Reclutador r = reclutadorRepository.findByUsername(user).get();
+            Set<Role> s = r.getRoles();
 
-        return procesoRepository.findAll();
+            for (Role ro : s) {
+                if (ro.getName().toString() == "ROLE_ADMIN") {
+                    return procesoRepository.findAll();
+                } else {
+                    return procesoRepository.findByReclu(r.getId());
+                }
+            }
+        } else {
+
+        }
+
+        return null;
     }
+
+    // build get employee by id REST API
+    @GetMapping("{id}")
+    public ResponseEntity<Proceso> getProcesoById(@PathVariable Long id, HttpServletRequest request) {
+        String user = request.getRemoteUser();
+        Reclutador r = reclutadorRepository.findByUsername(user).get();
+        Set<Role> roles = r.getRoles();
+        String rol = null;
+
+        for (Role rs : roles) {
+            rol = String.valueOf(rs.getName());
+        }
+
+
+        Proceso proceso = procesoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Proceso not exists with id: " + id));
+        if (!Objects.equals(proceso.getElReclutador().getUsername(), user)) {
+            if (rol == "ROLE_ADMIN") {
+                return ResponseEntity.ok(proceso);
+            }
+            return null;
+        } else if ((Objects.equals(proceso.getElReclutador().getUsername(), user))) {
+            return ResponseEntity.ok(proceso);
+        }
+        return null;
+    }
+
 
     @PostMapping
     public Proceso createProceso(@RequestBody Proceso proceso) {
         if (proceso.getProcesoCandidatos().isEmpty()) {
             procesoRepository.save(proceso);
-            System.out.println("Empty");
         } else {
             procesoRepository.save(proceso);
             Set<ProcesoCandidatos> losProcesos;
             losProcesos = proceso.getProcesoCandidatos();
-            System.out.println(" not Empty");
             for (ProcesoCandidatos pc : losProcesos) {
                 ProcesoCandidatos procesoCandidatos = new ProcesoCandidatos();
                 procesoCandidatos.setProceso(procesoRepository.findById(proceso.getId()).get());
                 procesoCandidatos.setCandidatos(candidatosRepository.findById(pc.getCandidatos().getId()).get());
+                procesoCandidatos.setMotivo("");
+                procesoCandidatos.setEntrevistado(ProcesoCandidatos.UserSelectionENUM.NO_ENTREVISTADO);
+                procesoCandidatos.setFechaE(null);
                 procesoCandidatosReposotory.save(procesoCandidatos);
             }
         }
@@ -80,13 +132,13 @@ public class ProcesoController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Proceso> updateProceso(@PathVariable Long id, /* El que creamos en el cliente */ @RequestBody Proceso procesoDetails) {
+    public ResponseEntity<Proceso> updateProceso(@PathVariable Long id, /* El que creamos en el cliente */ @RequestBody Proceso procesoDetails, HttpServletRequest request) {
 
         // El que ya tenemos
         Proceso updatedProceso = procesoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No existe proceo con ese ID: " + id));
 
         String[] vinculacion = procesoDetails.getLaVinculacion().toString().split("=");
-        long laVinculacion = Long.valueOf(vinculacion[1]);
+        long laVinculacion = Long.parseLong(vinculacion[1]);
 
 
         updatedProceso.setElDepartamento(dptoRepository.findById(procesoDetails.getElDepartamento().getId()).get());
@@ -101,8 +153,7 @@ public class ProcesoController {
 
         Set<ProcesoCandidatos> losCandidatosAntiguos = updatedProceso.getProcesoCandidatos();
         Set<ProcesoCandidatos> losCandidatosNuevos = procesoDetails.getProcesoCandidatos();
-        System.out.println(losCandidatosAntiguos);
-        System.out.println(losCandidatosNuevos);
+
 
         List<String> candisA = new ArrayList<>();
         for (ProcesoCandidatos pcA : losCandidatosAntiguos) {
@@ -116,44 +167,14 @@ public class ProcesoController {
 
 
         if (laVinculacion == 1) {
-            System.out.println("LABORAL");
             updatedProceso.setLaContratacion(contratacionRepository.findById(procesoDetails.getLaContratacion().getId()).get());
             updatedProceso.setLaVinculacion(vinculacionRepository.findById(laVinculacion).get());
 
         } else if (laVinculacion == 2) {
-            System.out.println("ESTUDIANTE");
             updatedProceso.setLaVinculacion(vinculacionRepository.findById(laVinculacion).get());
             updatedProceso.setLaContratacion(null);
         }
 
-//        if (candisA.equals(candisN)) {
-//            System.out.println(losCandidatosAntiguos);
-//            System.out.println(losCandidatosNuevos);
-//            System.out.println("not changed");
-//
-//        } else {
-//
-//            // Borramos las relaciones
-//            for (ProcesoCandidatos ls : losCandidatosAntiguos) {
-//                if (candisN.contains(ls.getCandidatos().getId())) {
-//                    System.out.println("Ya está sdentro");
-//                } else {
-//                    procesoCandidatosReposotory.deleteById(ls.getId());
-//                    System.out.println(ls);
-//                }
-//
-//            }
-//
-//            // Creamos las nuevas relaciones
-//            for (ProcesoCandidatos pc : losCandidatosNuevos) {
-//                ProcesoCandidatos procesoCandidatos = new ProcesoCandidatos();
-//                procesoCandidatos.setProceso(procesoRepository.findById(updatedProceso.getId()).get());
-//                procesoCandidatos.setCandidatos(candidatosRepository.findById(pc.getCandidatos().getId()).get());
-//                procesoCandidatosReposotory.save(procesoCandidatos);
-//            }
-//            updatedProceso.setProcesoCandidatos(losCandidatosNuevos);
-//        }
-//        System.out.println();
 
         procesoRepository.save(updatedProceso);
 
@@ -163,7 +184,6 @@ public class ProcesoController {
 
     @DeleteMapping("{id}")
     public ResponseEntity<Proceso> deleteProceso(@PathVariable Long id) {
-        System.out.println("BORRANDO PROCESO " + id);
 
         List<ProcesoCandidatos> procesoCandidatos = procesoCandidatosReposotory.findAll();
 
@@ -178,55 +198,11 @@ public class ProcesoController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    // build get employee by id REST API
-    @GetMapping("{id}")
-    public ResponseEntity<Proceso> getProcesoById(@PathVariable Long id) {
-        Proceso proceso = procesoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Proceso not exists with id: " + id));
-        return ResponseEntity.ok(proceso);
-    }
-
-    // Get procesos by reclutador
-//    @GetMapping("/reclu/{id}")
-//    public List<Proceso> getProcesoByReclutador(@PathVariable Long id) {
-//        Reclutador r = reclutadorRepository.getById(id);
-//        String role = "";
-//        for (Role re : r.getRoles()) {
-//            role = String.valueOf(re.getName());
-//        }
-//        List<Proceso> allProcesos = procesoRepository.findAll();
-//        List<Proceso> procesosFiltrados = new ArrayList<>();
-//
-//        if (role == "ROLE_ADMIN") {
-//            procesosFiltrados = allProcesos;
-//        } else {
-//            for (Proceso p : allProcesos) {
-//                if (p.getElReclutador().getId() == id) {
-//                    procesosFiltrados.add(p);
-//                }
-//            }
-//        }
-//
-//
-//        return procesosFiltrados;
-//    }
 
     @GetMapping("/reclu/{id}")
     public List<Proceso> getAllProceso(@PathVariable Long id) {
-//        List<Proceso> losProcesosFiltrados;
-//        Reclutador r = reclutadorRepository.getById(id);
-//        String role = "";
-//        for (Role re : r.getRoles()) {
-//            role = String.valueOf(re.getName());
-//        }
-//
-//        if (role == "ROLE_ADMIN") {
-//            return procesoRepository.findAll();
-//        } else if (role == "ROLE_USER") {
-//            return procesoRepository.findByReclu(id);
-//        }
 
-
-        return  procesoRepository.findByReclu(id);
+        return procesoRepository.findByReclu(id);
     }
 
 }

@@ -16,83 +16,77 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import Alert from '@mui/material/Alert';
 import AuthService from "../../services/auth.service"
 import { textAlign } from "@mui/system";
+import { IconButton, InputAdornment } from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
-function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
 
-const theme = createTheme();
 
 const SignUp = () => {
-
-  let navigate = useNavigate();
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [nombre, setNombre] = useState("");
   const [apellidos, setApellidos] = useState("");
-  const [message, setMessage] = useState("");
-  const [rol, setRol] = useState("");
+  const [role, setRole] = useState(["user"])
 
-  const onChangeRol = (e) => {
-    if (e.target.checked) {
-      setRol("ROLE_ADMIN")
-    } else {
-      setRol("ROLE_USER")
-    }
+  const register = {
+    username: username,
+    nombre: nombre,
+    apellidos: apellidos,
+    email: email,
+    password: password,
+    role: role
   }
 
-  const onChangeUsername = (e) => {
-    const username = e.target.value;
-    setUsername(username);
+  const [repeatedPassword, setrepeatedPassword] = useState("");
+
+  const [showPassword, setshowPassword] = useState(false)
+
+  const [message, setMessage] = useState("");
+  const navigate = useNavigate();
+  const theme = createTheme();
+
+  const handleClickShowPassword = () => {
+    setshowPassword(!showPassword)
   };
 
-  const onChangeEmail = (e) => {
-    const email = e.target.value;
-    setEmail(email);
-  };
-  const onChangePassword = (e) => {
-    const password = e.target.value;
-    setPassword(password);
-  };
+  function onChangeRole(e) {
+    var checked = e.target.checked;
+    if (checked) {
+      setRole(["admin"]);
+    } else {
+      setRole(["user"]);
+    }
 
-  const onChangeNombre = (e) => {
-    const nombre = e.target.value;
-    setNombre(nombre);
-  };
+  }
 
-  const onChangeApellidos = (e) => {
-    const apellidos = e.target.value;
-    setApellidos(apellidos);
-  };
-
-
-  const handleSubmit = (event) => {
+  function handleSubmit(event) {
     event.preventDefault();
+    if (nombre && apellidos && email && password && (password == repeatedPassword)) {
+      console.log("TRUE")
+      AuthService.register(register).then((response) => {
+        console.log(response.data)
+        console.log(register)
+        navigate("/login");
+      }, (error) => {
+        const resMessage =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+        setMessage(resMessage);
+      });
+    } else {
 
-    AuthService.register(username, nombre, apellidos, email, password).then((response) => {
-      console.log(response);
-      navigate("/login")
-    }, (error) => {
-      const resMessage = (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) || error.message || error.toString();
-      setMessage(resMessage)
-    })
+    }
 
-  };
+
+
+
+  }
+
 
   return (
     <ThemeProvider theme={theme}>
@@ -116,39 +110,30 @@ const SignUp = () => {
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
-                  autoComplete="given-name"
-                  name="firstName"
                   required
                   fullWidth
-                  id="firstName"
-                  label="First Name"
+                  label="Nombre"
                   autoFocus
                   value={nombre}
-                  onChange={onChangeNombre}
+                  onChange={(e => setNombre(e.target.value))}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
                   required
                   fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  name="lastName"
-                  autoComplete="family-name"
+                  label="Apellido(s)"
                   value={apellidos}
-                  onChange={onChangeApellidos}
+                  onChange={(e => setApellidos(e.target.value))}
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
                   required
                   fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
+                  label="Email"
                   value={email}
-                  onChange={onChangeEmail}
+                  onChange={(e => setEmail(e.target.value))}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -156,55 +141,96 @@ const SignUp = () => {
                   margin="normal"
                   required
                   fullWidth
-                  id="email"
                   label="username"
                   name="email"
                   autoComplete="email"
-                  autoFocus
                   value={username}
-                  onChange={onChangeUsername}
+                  onChange={(e => setUsername(e.target.value))}
                   error={username.length == 0}
-                  helperText={textAlign.length == 0 ? "Debes introducir un nombre de usuario" : ""}
+                  helperText={username.length == 0 ? "Debes introducir un nombre de usuario" : ""}
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
                   required
                   fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
+                  label="password"
+                  type={showPassword ? 'text' : 'password'}
                   autoComplete="new-password"
                   value={password}
-                  onChange={onChangePassword}
-                />
+                  onChange={(e => setPassword(e.target.value))}
+                  error={password.length === 0 || password.length <= 8}
+                  helperText={password.length === 0 || password.length <= 8 ? "La contraseña debe tener mínimo 8 caracteres" : ""}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          onClick={handleClickShowPassword}
+                          edge="end"
+                        >
+                          {showPassword ? <VisibilityOff /> : <Visibility />}
+
+                        </IconButton>
+                      </InputAdornment>
+                    )
+                  }} />
               </Grid>
+
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  label="repeat password"
+                  type={showPassword ? 'text' : 'password'}
+                  autoComplete="new-password"
+                  value={repeatedPassword}
+                  error={password != repeatedPassword}
+                  onChange={(e => setrepeatedPassword(e.target.value))}
+                  helperText={password != repeatedPassword ? "Las contraseñas no coinciden" : ""}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          onClick={handleClickShowPassword}
+                          edge="end"
+                        >
+                          {showPassword ? <VisibilityOff /> : <Visibility />}
+
+                        </IconButton>
+                      </InputAdornment>
+                    )
+                  }} />
+              </Grid>
+
+
               <Grid item xs={12}>
                 <FormControlLabel
-                  control={<Checkbox onChange={(e) => onChangeRol(e)} value="allowExtraEmails" color="primary" />}
-                  label="I want to receive inspiration, marketing promotions and updates via email."
+                  control={<Checkbox value="allowExtraEmails" onClick={(e) => onChangeRole(e)} color="primary" />}
+                  label="ADMINISTRADOR"
                 />
               </Grid>
             </Grid>
+            {message && (
+              <Alert severity="error">
+                {message}
+              </Alert>
+            )}
             <Button
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              sx={{ mt: 2, mb: 2 }}
+              disabled={!(nombre && apellidos && email && password && (password == repeatedPassword))}
             >
               Sign Up
             </Button>
-            <Grid container justifyContent="flex-end">
-              <Grid item>
-                <Link href="/login" variant="body2">
-                  Already have an account? Sign in
-                </Link>
-              </Grid>
-            </Grid>
+
+            <Link onClick={(e) => navigate("/login")} variant="body2">
+              Already have an account? Sign in
+            </Link>
+
           </Box>
         </Box>
-        <Copyright sx={{ mt: 5 }} />
       </Container>
     </ThemeProvider>
   );

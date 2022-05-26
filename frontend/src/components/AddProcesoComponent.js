@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate } from "react-router-dom";
 import ProcesoService from '../services/ProcesoService';
 import ValuesService from '../services/ValuesService';
-import { FormControl, InputLabel, Select, MenuItem, Button, Container, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Autocomplete, Stack, Grid, Card, CardActionArea, CardContent } from '@mui/material';
+import { FormControl, InputLabel, Select, MenuItem, Button, Container, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Autocomplete, Stack, Grid, Card, CardActionArea, CardContent, Dialog, DialogContent, DialogContentText, DialogActions, Slide, DialogTitle, Alert } from '@mui/material';
 import { ResponsivePie } from '@nivo/pie'
 
 
@@ -20,13 +20,22 @@ import AuthService from '../services/auth.service';
 
 const AddProcesoComponent = () => {
 
+    const Transition = React.forwardRef(function Transition(props, ref) {
+        return <Slide direction="down" ref={ref} {...props} />;
+    });
+
     // Dialogo 
     const [open, setOpen] = useState(false);
+    const [message, setMessage] = useState("");
 
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
 
+    const handleClose = () => {
+        setOpen(false);
+    };
 
-    // Variables
-    const [progress, setProgress] = useState(0);
 
     // Esto son los desplegables que se muestran, guardamos todos los objetos
     // pero solo mostramos el nombre
@@ -60,10 +69,6 @@ const AddProcesoComponent = () => {
     const [titu_id, setTitu_id] = useState([])
     const [candi_id, setCandi_id] = useState([])
 
-    let navigate = useNavigate()
-
-    var percentil = Math.trunc((100 * puestoT.mujeres) / (puestoT.hombres + puestoT.mujeres), 3)
-
     const data = [
         {
             "id": "Hombres",
@@ -79,6 +84,10 @@ const AddProcesoComponent = () => {
         },
 
     ];
+    let navigate = useNavigate()
+
+    var percentil = Math.trunc((100 * puestoT.mujeres) / (puestoT.hombres + puestoT.mujeres), 3)
+
 
 
 
@@ -143,100 +152,103 @@ const AddProcesoComponent = () => {
 
         e.preventDefault();
 
+        if (!(dpto_id && ct_id && reclu_id && fechaInicio && fechaFin && vinc_id && puesto_id && jl_id && validForm() && (candi_id.length > 0) && (titu_id.length > 0))) {
+            console.log("todont perfe")
+            handleClickOpen()
+        } else if (dpto_id && ct_id && reclu_id && fechaInicio && fechaFin && vinc_id && puesto_id && jl_id && validForm() && (candi_id.length > 0) && (titu_id.length > 0)) {
+            var titulacionesArr = [];
+            titu_id.forEach(function (v) {
+                titulacionesArr.push({ id: v });
+            });
 
-        var titulacionesArr = [];
-        titu_id.forEach(function (v) {
-            titulacionesArr.push({ id: v });
-        });
+            var candidatosArr = [];
+            for (let index = 0; index < candi_id.length; index++) {
+                candidatosArr.push(
+                    {
+                        candidatos: {
+                            id: candi_id[index]
+                        },
+                    }
+                );
 
-        var candidatosArr = [];
-        for (let index = 0; index < candi_id.length; index++) {
-            candidatosArr.push(
-                {
-                    candidatos: {
-                        id: candi_id[index]
+            }
+
+
+
+            if (vinc_id === 1) {
+                const procesoLaboral = {
+                    "elDepartamento": {
+                        "id": dpto_id
                     },
-                }
-            );
+                    "elCentroTrabajo": {
+                        "id": ct_id
+                    },
+                    "elReclutador": {
+                        "id": reclu_id
+                    },
+                    "fechaInicio": fechaInicio,
+                    "fechaFin": fechaFin,
+                    "laVinculacion": {
+                        "id": vinc_id
+                    },
+                    "elPuesto": {
+                        "id": puesto_id
+                    },
+                    "laContratacion": {
+                        "id": tc_id
+                    },
+                    "laJornada": {
+                        "id": jl_id
+                    },
+                    "lasTitulaciones": titulacionesArr,
 
+                    "procesoCandidatos": candidatosArr,
+                    "requisitos": requisitos
+                };
+
+
+                ProcesoService.createProceso(procesoLaboral).then((response) => {
+                    window.location.reload(true);
+
+                }).catch(error => { console.log(error); });
+
+            } else {
+                const procesoEstudiante = {
+                    "elDepartamento": {
+                        "id": dpto_id
+                    },
+                    "elCentroTrabajo": {
+                        "id": ct_id
+                    },
+                    "elReclutador": {
+                        "id": reclu_id
+                    },
+                    "fechaInicio": fechaInicio,
+                    "fechaFin": fechaFin,
+                    "laVinculacion": {
+                        "id": vinc_id
+                    },
+                    "elPuesto": {
+                        "id": puesto_id
+                    },
+                    "laJornada": {
+                        "id": jl_id
+                    },
+                    "lasTitulaciones": titulacionesArr,
+                    "procesoCandidatos": candidatosArr,
+                    "requisitos": requisitos
+                };
+
+                ProcesoService.createProceso(procesoEstudiante).then((response) => {
+                    window.location.reload(true);
+                }).catch(error => { console.log(error); });
+            }
         }
 
 
 
-        if (vinc_id === 1) {
-            const procesoLaboral = {
-                "elDepartamento": {
-                    "id": dpto_id
-                },
-                "elCentroTrabajo": {
-                    "id": ct_id
-                },
-                "elReclutador": {
-                    "id": reclu_id
-                },
-                "fechaInicio": fechaInicio,
-                "fechaFin": fechaFin,
-                "laVinculacion": {
-                    "id": vinc_id
-                },
-                "elPuesto": {
-                    "id": puesto_id
-                },
-                "laContratacion": {
-                    "id": tc_id
-                },
-                "laJornada": {
-                    "id": jl_id
-                },
-                "lasTitulaciones": titulacionesArr,
-
-                "procesoCandidatos": candidatosArr,
-                "requisitos": requisitos
-            };
-            console.log(procesoLaboral);
-
-
-            ProcesoService.createProceso(procesoLaboral).then((response) => {
-                console.log(response.data.id)
-                //avigate("/#")
-                navigate(`/edit-proceso/${response.data.id}`)
-            }).catch(error => { console.log(error); });
-
-        } else {
-            const procesoEstudiante = {
-                "elDepartamento": {
-                    "id": dpto_id
-                },
-                "elCentroTrabajo": {
-                    "id": ct_id
-                },
-                "elReclutador": {
-                    "id": reclu_id
-                },
-                "fechaInicio": fechaInicio,
-                "fechaFin": fechaFin,
-                "laVinculacion": {
-                    "id": vinc_id
-                },
-                "elPuesto": {
-                    "id": puesto_id
-                },
-                "laJornada": {
-                    "id": jl_id
-                },
-                "lasTitulaciones": titulacionesArr,
-                "procesoCandidatos": candidatosArr,
-                "requisitos": requisitos
-            };
-
-            ProcesoService.createProceso(procesoEstudiante).then((response) => {
-                console.log(response.data.id)
-                navigate(`/edit-proceso/${response.data.id}`)
-            }).catch(error => { console.log(error); });
-        }
 
     }
-
 
     function handleInputChange2(event, value) {
         if (value) {
@@ -288,12 +300,13 @@ const AddProcesoComponent = () => {
 
     function tipoc_() {
 
+
         if (vinc_id === 1) {
             return <FormControl fullWidth margin='normal'>
-                <InputLabel id="demo-simple-select-label">Tipo de contratación: </InputLabel>
-                <Select style={{ backgroundColor: 'white' }} onChange={(e) => setTc_id(e.target.value)} labelId="demo-simple-select-label" id="demo-simple-select" label="Centro de trabajo" value={tc_id}>
+                <InputLabel required error={!tc_id} id="demo-simple-select-label">Tipo de contratación: </InputLabel>
+                <Select required error={!tc_id} style={{ backgroundColor: 'white' }} onChange={(e) => setTc_id(e.target.value)} labelId="demo-simple-select-label" id="demo-simple-select" label="Centro de trabajo" value={tc_id}>
                     {tcs.map(
-                        tc => <MenuItem key={tc.id} value={tc.id}> {tc.nombre}</MenuItem>
+                        tc => <MenuItem divider key={tc.id} value={tc.id}> {tc.nombre}</MenuItem>
                     )}
                 </Select>
             </FormControl>;
@@ -302,6 +315,10 @@ const AddProcesoComponent = () => {
         } else {
             return;
         }
+    }
+
+    function goTo(e) {
+        window.location.reload(true);
     }
 
     function resetButton() {
@@ -331,101 +348,105 @@ const AddProcesoComponent = () => {
 
     function personas_() {
         if (puesto_id) {
-            return <Grid container spacing={2}>
-                <Grid item xs>
-                    <Card >
-                        <CardContent style={{ height: 300 }}>
-                            <ResponsivePie
-                                data={data}
-                                margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
-                                innerRadius={0.5}
-                                padAngle={0.7}
-                                cornerRadius={3}
-                                activeOuterRadiusOffset={8}
-                                borderWidth={1}
-                                borderColor={{
-                                    from: 'color',
-                                    modifiers: [
-                                        [
-                                            'darker',
-                                            0.2
+            return <div>
+                {/* <h3>Mujeres: {puestoT.mujeres}, Hombres: {puestoT.hombres}</h3> */}
+                <Grid container spacing={2}>
+
+                    <Grid item xs>
+                        <Card >
+                            <CardContent style={{ height: 300 }}>
+                                <ResponsivePie
+                                    data={data}
+                                    margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
+                                    innerRadius={0.5}
+                                    padAngle={0.7}
+                                    cornerRadius={3}
+                                    activeOuterRadiusOffset={8}
+                                    borderWidth={1}
+                                    borderColor={{
+                                        from: 'color',
+                                        modifiers: [
+                                            [
+                                                'darker',
+                                                0.2
+                                            ]
                                         ]
-                                    ]
-                                }}
-                                colors={{ datum: 'data.color' }}
-                                arcLinkLabelsSkipAngle={10}
-                                arcLinkLabelsTextColor="#333333"
-                                arcLinkLabelsStraightLength={6}
-                                arcLinkLabelsThickness={2}
-                                arcLinkLabelsColor={{ from: 'color' }}
-                                arcLabelsSkipAngle={10}
-                                arcLabelsTextColor={{
-                                    from: 'color',
-                                    modifiers: [
-                                        [
-                                            'darker',
-                                            2
+                                    }}
+                                    colors={{ datum: 'data.color' }}
+                                    arcLinkLabelsSkipAngle={10}
+                                    arcLinkLabelsTextColor="#333333"
+                                    arcLinkLabelsStraightLength={6}
+                                    arcLinkLabelsThickness={2}
+                                    arcLinkLabelsColor={{ from: 'color' }}
+                                    arcLabelsSkipAngle={10}
+                                    arcLabelsTextColor={{
+                                        from: 'color',
+                                        modifiers: [
+                                            [
+                                                'darker',
+                                                2
+                                            ]
                                         ]
-                                    ]
-                                }}
-                                fill={[
-                                    {
-                                        match: {
+                                    }}
+                                    fill={[
+                                        {
+                                            match: {
+                                                id: 'hombres'
+                                            },
                                             id: 'hombres'
                                         },
-                                        id: 'hombres'
-                                    },
-                                    {
-                                        match: {
+                                        {
+                                            match: {
+                                                id: 'mujeres'
+                                            },
                                             id: 'mujeres'
-                                        },
-                                        id: 'mujeres'
-                                    }
-                                ]}
-                                legends={[
-                                    {
-                                        anchor: 'bottom',
-                                        direction: 'row',
-                                        justify: false,
-                                        translateX: 0,
-                                        translateY: 56,
-                                        itemsSpacing: 0,
-                                        itemWidth: 100,
-                                        itemHeight: 18,
-                                        itemTextColor: '#999',
-                                        itemDirection: 'left-to-right',
-                                        itemOpacity: 1,
-                                        symbolSize: 18,
-                                        symbolShape: 'circle',
-                                        effects: [
-                                            {
-                                                on: 'hover',
-                                                style: {
-                                                    itemTextColor: '#000'
+                                        }
+                                    ]}
+                                    legends={[
+                                        {
+                                            anchor: 'bottom',
+                                            direction: 'row',
+                                            justify: false,
+                                            translateX: 0,
+                                            translateY: 56,
+                                            itemsSpacing: 0,
+                                            itemWidth: 100,
+                                            itemHeight: 18,
+                                            itemTextColor: '#999',
+                                            itemDirection: 'left-to-right',
+                                            itemOpacity: 1,
+                                            symbolSize: 18,
+                                            symbolShape: 'circle',
+                                            effects: [
+                                                {
+                                                    on: 'hover',
+                                                    style: {
+                                                        itemTextColor: '#000'
+                                                    }
                                                 }
-                                            }
-                                        ]
-                                    }
-                                ]}
-                            />
-                        </CardContent>
-                    </Card>
+                                            ]
+                                        }
+                                    ]}
+                                />
+                            </CardContent>
+                        </Card>
 
-                </Grid>
-                <Grid item xs>
-                    <Card >
-                        <CardContent style={{ height: 300 }}>
+                    </Grid>
+                    <Grid item xs>
+                        <Card >
+                            <CardContent style={{ height: 300 }}>
 
-                            {
-                                per_mujer()
-                            }
+                                {
+                                    per_mujer()
+                                }
 
 
-                        </CardContent>
-                    </Card>
-                </Grid>
+                            </CardContent>
+                        </Card>
+                    </Grid>
 
-            </Grid >
+                </Grid >
+            </div>
 
 
         } else {
@@ -451,7 +472,7 @@ const AddProcesoComponent = () => {
                         <TableBody>
                             {candidatos.map((candidato) => {
                                 if (candi_id.includes(candidato.id))
-                                    return <TableRow key={candidato.id}>
+                                    return <TableRow hover key={candidato.id}>
                                         <TableCell component="th" scope="row">
                                             {candidato.nombre}
                                         </TableCell>
@@ -505,16 +526,22 @@ const AddProcesoComponent = () => {
     }, [candi_id])
 
     useEffect(() => {
-        console.log(puestos)
-        console.log(puesto_id)
+
         ValuesService.getPuestoById(puesto_id).then((response) => {
             setPuestoT(response.data)
-            console.log(response.data)
         }).catch(error => {
             console.log(error)
         })
 
     }, [puesto_id])
+
+    useEffect(() => {
+        setMessage("")
+        if (fechaInicio > fechaFin) {
+            setMessage("ERROR FECHA INICIO DEBE SER MENOR QUE FECHA FIN")
+        }
+    }, [fechaFin, fechaInicio])
+
 
 
     return (
@@ -528,8 +555,8 @@ const AddProcesoComponent = () => {
                                 <div >
 
                                     <FormControl fullWidth margin='normal' style={{ backgroundColor: 'white' }} >
-                                        <InputLabel id="demo-simple-select-label">Departamento</InputLabel>
-                                        <Select labelId="demo-simple-select-label" id="demo-simple-select" label="Departamento" onChange={(e) => { setDpto_id(e.target.value); setProgress(progress + 10) }} value={dpto_id} >
+                                        <InputLabel required error={!dpto_id} id="demo-simple-select-label">Departamento</InputLabel>
+                                        <Select required error={!dpto_id} labelId="demo-simple-select-label" id="demo-simple-select" label="Departamento" onChange={(e) => { setDpto_id(e.target.value) }} value={dpto_id} >
                                             {dptos.map(
                                                 dpto => <MenuItem divider key={dpto.id} value={dpto.id}>{dpto.nombre}</MenuItem>
                                             )}
@@ -537,8 +564,8 @@ const AddProcesoComponent = () => {
                                     </FormControl>
 
                                     <FormControl fullWidth margin='normal' style={{ backgroundColor: 'white' }}>
-                                        <InputLabel id="demo-simple-select-label">Centro de trabajo: </InputLabel>
-                                        <Select onChange={(e) => { setCt_id(e.target.value); setProgress(progress + 10) }} labelId="demo-simple-select-label" id="demo-simple-select" label="Centro de trabajo" value={ct_id}  >
+                                        <InputLabel required error={!ct_id} id="demo-simple-select-label">Centro de trabajo: </InputLabel>
+                                        <Select required error={!ct_id} onChange={(e) => { setCt_id(e.target.value) }} labelId="demo-simple-select-label" id="demo-simple-select" label="Centro de trabajo" value={ct_id}  >
                                             {cts.map(
                                                 ct => <MenuItem divider key={ct.id} value={ct.id}> {ct.nombre}</MenuItem>
                                             )}
@@ -546,8 +573,8 @@ const AddProcesoComponent = () => {
                                     </FormControl>
 
                                     <FormControl fullWidth margin='normal' style={{ backgroundColor: 'white' }}>
-                                        <InputLabel id="demo-simple-select-label">Reclutador: </InputLabel>
-                                        <Select onChange={(e) => { setReclu_id(e.target.value); setProgress(progress + 10) }} labelId="demo-simple-select-label" id="demo-simple-select" label="Centro de trabajo" value={reclu_id}>
+                                        <InputLabel required error={!reclu_id} id="demo-simple-select-label">Reclutador: </InputLabel>
+                                        <Select required error={!reclu_id} onChange={(e) => { setReclu_id(e.target.value) }} labelId="demo-simple-select-label" id="demo-simple-select" label="Centro de trabajo" value={reclu_id}>
                                             {reclus.map(reclu => {
                                                 if (reclu.roles[0].name == "ROLE_USER")
                                                     return <MenuItem divider key={reclu.id} value={reclu.id} > {reclu.nombre}, {reclu.apellidos}</MenuItem>
@@ -566,7 +593,7 @@ const AddProcesoComponent = () => {
                                                     views={['year', 'month', 'day']}
                                                     value={fechaInicio}
                                                     onChange={(e) => { setFechaInicio(e); }}
-                                                    renderInput={(params) => <TextField {...params} style={{ backgroundColor: 'white' }} />}
+                                                    renderInput={(params) => <TextField  {...params} style={{ backgroundColor: 'white' }} />}
                                                 />
 
                                                 <DatePicker
@@ -580,9 +607,12 @@ const AddProcesoComponent = () => {
                                             </Stack>
                                         </LocalizationProvider>
                                     </FormControl>
+
+                                    {message && <Alert sx={{ mt: 2 }} severity='error'> {message}</Alert>}
+
                                     <FormControl fullWidth margin='normal' style={{ backgroundColor: 'white' }}>
-                                        <InputLabel id="demo-simple-select-label">Titulaciones: </InputLabel>
-                                        <Select multiple onChange={(e) => { setTitu_id(e.target.value); }} label="Titulaciones" value={titu_id}>
+                                        <InputLabel required error={titu_id.length < 1} id="demo-simple-select-label">Titulaciones: </InputLabel>
+                                        <Select required error={titu_id.length < 1} multiple onChange={(e) => { setTitu_id(e.target.value); }} label="Titulaciones" value={titu_id}>
                                             {titulaciones.map(
                                                 titu => <MenuItem divider key={titu.id} value={titu.id} > {titu.nombre}</MenuItem>
                                             )}
@@ -591,8 +621,8 @@ const AddProcesoComponent = () => {
 
 
                                     <FormControl fullWidth margin='normal' style={{ backgroundColor: 'white' }}>
-                                        <InputLabel id="demo-simple-select-label" >Vinculacion: </InputLabel>
-                                        <Select onChange={(e) => { setVinc_id(e.target.value); setProgress(progress + 10) }} label="Vinculacion" value={vinc_id} >
+                                        <InputLabel required error={!vinc_id} id="demo-simple-select-label" >Vinculacion: </InputLabel>
+                                        <Select required error={!vinc_id} onChange={(e) => { setVinc_id(e.target.value) }} label="Vinculacion" value={vinc_id} >
                                             {vincus.map(
                                                 vincu => <MenuItem divider key={vincu.id} value={vincu.id} > {vincu.nombre}</MenuItem>
                                             )}
@@ -604,25 +634,22 @@ const AddProcesoComponent = () => {
                                     }
 
                                     <FormControl fullWidth margin='normal' style={{ backgroundColor: 'white' }}>
-                                        <InputLabel id="demo-simple-select-label">Puesto: </InputLabel>
-                                        <Select onChange={(e) => { setPuesto_id(e.target.value); setProgress(progress + 10) }} labelId="demo-simple-select-label" id="demo-simple-select" label="Centro de trabajo" value={puesto_id}>
+                                        <InputLabel required error={!puesto_id} id="demo-simple-select-label">Puesto: </InputLabel>
+                                        <Select required error={!puesto_id} onChange={(e) => { setPuesto_id(e.target.value) }} labelId="demo-simple-select-label" id="demo-simple-select" label="Centro de trabajo" value={puesto_id}>
                                             {puestos.map(
                                                 puesto => <MenuItem divider key={puesto.id} value={puesto.id} > {puesto.nombre}</MenuItem>
                                             )}
                                         </Select>
                                     </FormControl>
-                                    <h3>Mujeres: {puestoT.mujeres}, Hombres: {puestoT.hombres}</h3>
+
 
                                     {
                                         personas_()
                                     }
 
-
-
                                     <FormControl fullWidth margin='normal' style={{ backgroundColor: 'white' }}>
-
-                                        <InputLabel id="demo-simple-select-label">Jornada Laboral: </InputLabel>
-                                        <Select onChange={(e) => setJl_id(e.target.value)} labelId="demo-simple-select-label" id="demo-simple-select" label="Centro de trabajo" value={jl_id} >
+                                        <InputLabel required error={!jl_id} id="demo-simple-select-label">Jornada Laboral: </InputLabel>
+                                        <Select required error={!jl_id} onChange={(e) => setJl_id(e.target.value)} labelId="demo-simple-select-label" id="demo-simple-select" label="Centro de trabajo" value={jl_id} >
                                             {jls.map(
                                                 jl => <MenuItem divider key={jl.id} value={jl.id} > {jl.nombre}, {jl.horaSemanal} H/S</MenuItem>
                                             )}
@@ -639,36 +666,56 @@ const AddProcesoComponent = () => {
 
                                 <h3> Candidatos</h3>
 
-                                <FormControl fullWidth margin='normal' style={{ backgroundColor: 'white' }}>
+                                <FormControl required error={candi_id.length < 1} fullWidth margin='normal' style={{ backgroundColor: 'white' }}>
                                     <Autocomplete
+
                                         disablePortal
                                         id="combo-box-demo"
                                         options={optiones}
                                         onChange={handleInputChange2}
 
 
-                                        renderInput={(params) => <TextField {...params} label="Candidatos:" />} />
+                                        renderInput={(params) => <TextField {...params} error={candi_id.length < 1} label="Candidatos:" />} />
                                 </FormControl>
 
                                 {
                                     candidatos_()
                                 }
 
-
-
-
-
-
-
-                                <Button href='/' onClick={(e) => saveOrUpdateProceso(e)} variant='contained' color='success' style={{ marginTop: "10px" }} disabled={!enabled}>SAVE</Button>
+                                <Button
+                                    href='#'
+                                    onClick={(e) => saveOrUpdateProceso(e)}
+                                    variant='contained'
+                                    color='success'
+                                    style={{ marginTop: "10px" }}
+                                    disabled={!enabled}
+                                >
+                                    SAVE
+                                </Button>
                                 <Button variant='contained' style={{ marginTop: "10px", marginLeft: "10px" }} onClick={resetButton}> RESET</Button>
-                                <Button href='/' variant='contained' color='error' style={{ marginLeft: "10px", marginTop: "10px" }}> CANCEL</Button>
+                                <Button onClick={(e) => goTo()} variant='contained' color='error' style={{ marginLeft: "10px", marginTop: "10px" }}> CANCEL</Button>
                             </form>
                         </Paper>
                     </Container>
 
                 </div>
             </div >
+
+            <Dialog
+                open={open}
+                onClose={handleClose}
+            >
+                <DialogTitle>ERROR</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Ha habido un error en la autenticación de datos
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose}>CANCELAR</Button>
+                    <Button onClick={handleClose}>ACEPTAR</Button>
+                </DialogActions>
+            </Dialog>
         </React.Fragment>
     )
 }

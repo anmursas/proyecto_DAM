@@ -3,21 +3,19 @@ package procesos.springboot.payload.response;
 import java.util.List;
 
 public class JwtResponse {
-
     private String token;
     private String type = "Bearer";
-
     private Long id;
-    private String nombre;
-    private String apellidos;
     private String username;
     private String email;
+    private List<String> roles;
 
-
-    public JwtResponse(String accessToken, Long id, String username, String email) {
+    public JwtResponse(String accessToken, Long id, String username, String email, List<String> roles) {
         this.token = accessToken;
         this.id = id;
         this.username = username;
+        this.email = email;
+        this.roles = roles;
     }
 
     public String getAccessToken() {
@@ -44,20 +42,12 @@ public class JwtResponse {
         this.id = id;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getEmail() {
+        return email;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getApellidos() {
-        return apellidos;
-    }
-
-    public void setApellidos(String apellidos) {
-        this.apellidos = apellidos;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getUsername() {
@@ -68,12 +58,7 @@ public class JwtResponse {
         this.username = username;
     }
 
-    public String getEmail() {
-        return email;
+    public List<String> getRoles() {
+        return roles;
     }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
 }

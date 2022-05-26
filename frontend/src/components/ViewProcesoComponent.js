@@ -68,7 +68,9 @@ const ViewProcesoComponent = () => {
         "apellido1": "",
         "sexo": ""
       },
-      "entrevistado": ""
+      "entrevistado": "",
+      "fechaE" : "",
+      "motivo": ""
     }
   ])
 
@@ -267,7 +269,9 @@ const ViewProcesoComponent = () => {
                   <TableCell align={'center'} style={{ fontWeight: 'bold' }}>NOMBRE</TableCell>
                   <TableCell align={'center'} style={{ fontWeight: 'bold' }}>APELLIDO</TableCell>
                   <TableCell align={'center'} style={{ fontWeight: 'bold' }}>SEXO</TableCell>
-                  <TableCell align={'center'} style={{ fontWeight: 'bold' }}>ENTREVISTADO/A</TableCell>
+                  <TableCell align={'center'} style={{ fontWeight: 'bold' }}>ENTREVISTA</TableCell>
+                  <TableCell align={'center'} style={{ fontWeight: 'bold' }}>FECHA ENTERVISTA</TableCell>
+                  <TableCell align={'center'} style={{ fontWeight: 'bold' }}>MOTIVO DESCARTE</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -279,7 +283,9 @@ const ViewProcesoComponent = () => {
                         <TableCell width={'10%'} align={'center'}>{titulacion.candidatos.nombre}</TableCell>
                         <TableCell width={'10%'} align={'center'}>{titulacion.candidatos.apellido1}</TableCell>
                         <TableCell width={'10%'} align={'center'}>{titulacion.candidatos.sexo}</TableCell>
-                        <TableCell width={'10%'} align={'center'}>{titulacion.entrevistado}</TableCell>
+                        <TableCell width={'10%'} align={'center'}>{titulacion.entrevistado == "NO_ENTREVISTADO" ? "NO ENTERVISTADO" : titulacion.entrevistado}</TableCell>
+                        <TableCell width={'10%'} align={'center'}>{titulacion.fechaE}</TableCell>
+                        <TableCell width={'10%'} align={'center'}>{titulacion.motivo}</TableCell>
 
                       </TableRow>
 

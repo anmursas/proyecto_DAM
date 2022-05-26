@@ -23,7 +23,7 @@ public class TitulacionAcademica {
     private String nombre;
 
     @ManyToMany(
-            fetch = FetchType.EAGER,
+            fetch = FetchType.LAZY,
             mappedBy = "lasTitulaciones"
     )
     @JsonIgnore

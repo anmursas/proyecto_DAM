@@ -8,6 +8,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.sql.Date;
 
 @Getter
 @Setter
@@ -35,9 +36,13 @@ public class ProcesoCandidatos {
     @Enumerated(EnumType.STRING)
     private UserSelectionENUM entrevistado;
 
+    @Column(name = "motivo", nullable = true)
+    private String motivo;
+
+    @Column(name = "fechaE", nullable = true)
+    private Date fechaE;
+
     public enum UserSelectionENUM {SÍ, NO, NO_ENTREVISTADO}
-
-
 
 
 }

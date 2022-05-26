@@ -9,22 +9,12 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import TableSortLabel from '@mui/material/TableSortLabel';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
-
 import { visuallyHidden } from '@mui/utils';
 import ProcesoService from '../services/ProcesoService';
 import { useState, useEffect } from 'react'
-
-
 import { Button, Stack } from '@mui/material';
 import { useNavigate } from "react-router-dom";
-import AuthService from '../services/auth.service';
-
-
-
-
 
 function parseJwt(token) {
   try {
@@ -51,7 +41,7 @@ function createData(id, cod, dpto, centro, reclu_id, reclu_nom, reclu_ape, fecha
     puesto,
     jl,
     jl_hs,
-    req
+    //req
   };
 }
 
@@ -147,12 +137,12 @@ const headCells = [
     disablePadding: false,
     label: 'JORNADA',
   },
-  {
-    id: 'req',
-    numeric: false,
-    disablePadding: false,
-    label: 'REQUISITOS',
-  },
+  // {
+  //   id: 'req',
+  //   numeric: false,
+  //   disablePadding: false,
+  //   label: 'REQUISITOS',
+  // },
 ];
 
 
@@ -160,7 +150,6 @@ function EnhancedTableHead(props) {
   const { order, orderBy, onRequestSort } =
     props;
   const createSortHandler = (property) => (event) => {
-    console.log(event);
     onRequestSort(event, property);
   };
 
@@ -214,8 +203,7 @@ export default function ListProcesoComponent() {
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [rawRows, setRawRows] = useState([])
 
-  const [currentUser, setCurrentUser] = useState('');
-  const [roles, setRoles] = useState([])
+
 
 
 
@@ -237,79 +225,35 @@ export default function ListProcesoComponent() {
         rawRows[index].elPuesto.nombre,
         rawRows[index].laJornada.nombre,
         rawRows[index].laJornada.horaSemanal,
-        rawRows[index].requisitos
+        //rawRows[index].requisitos
       )
     )
 
   }
 
-  // Se ejecuta cuando se monta el componente
+
+
   useEffect(() => {
-    const user = AuthService.getCurrentUser();
-    if (!user) {
-      navigate("/login")
-    } else {
-      const decodedJwt = parseJwt(user.accessToken);
-      console.log(decodedJwt.sub)
-      setRoles(decodedJwt.sub)
-      console.log(user)
-      setCurrentUser(user);
-      console.log(user.roles)
-      if (roles.includes("ROLE_ADMIN")) {
-        console.log("ADMIN (ROLE_ADMIN)")
-
-      } else if (roles.includes("ROLE_USER")) {
-        console.log("ROLE_USER")
-      }
-
-
-    }
-
+    ProcesoService.getAllProcesos().then((response) => {
+      setRawRows(response.data)
+      console.log("###########################")
+      console.log(response.data);
+    }).catch(error => {
+      console.log(error);
+    })
 
   }, [])
 
-  useEffect(() => {
-
-    if (roles.includes("ROLE_ADMIN")) {
-      console.log("ADMIN (ROLE_ADMIN)")
-
-      ProcesoService.getAllProcesos().then((response) => {
-        setRawRows(response.data)
-        console.log("###########################")
-        console.log(response.data);
-      }).catch(error => {
-        console.log(error);
-      })
-
-    } else if (roles.includes("ROLE_USER")) {
-      console.log("ROLE_USER")
-
-      ProcesoService.getProcesoByReclutador(currentUser.id).then((response) => {
-        setRawRows(response.data)
-      }).catch(error => {
-        console.log(error)
-      })
-    }
-
-    console.log(currentUser.id)
-
-  }, [currentUser, roles])
-
-
-
-  // Recoger procesos
-  const getAllProcesos = () => {
-
-
-
-
-  }
 
   // Borrar proceso
   const deleteProceso = (procesoId) => {
     console.log(procesoId)
-    ProcesoService.deleteProceso(procesoId).then((response) => {
-      getAllProcesos()
+    ProcesoService.deleteProceso(procesoId).then(() => {
+      ProcesoService.getAllProcesos().then((response) => {
+        setRawRows(response.data)
+      }).catch(error => {
+        console.log(error)
+      })
     }).catch(error => {
       console.log(error)
     });
@@ -369,7 +313,6 @@ export default function ListProcesoComponent() {
             <EnhancedTableHead
               order={order}
               orderBy={orderBy}
-
               onRequestSort={handleRequestSort}
             />
             <TableBody>
@@ -403,7 +346,7 @@ export default function ListProcesoComponent() {
                       <TableCell align="left">{row.vincu}</TableCell>
                       <TableCell align="left">{row.puesto}</TableCell>
                       <TableCell align="left">{row.jl}, {row.jl_hs}H/S</TableCell>
-                      <TableCell align="left">{row.req}</TableCell>
+                      {/* <TableCell align="left">{row.req}</TableCell> */}
                       <TableCell >
 
                       </TableCell>

@@ -4,6 +4,8 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+document.cookie = `referral_key=hello;max-age=604800;domain=example.com`
+
 ReactDOM.render(
   <React.StrictMode>
     <App />

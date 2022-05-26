@@ -17,44 +17,36 @@ public class UserDetailsImpl implements UserDetails {
     private static final long serialVersionUID = 1L;
 
     private Long id;
-    private String nombre;
-    private String apellidos;
+
     private String username;
+
     private String email;
+
     @JsonIgnore
     private String password;
 
-    private Set<Role> roles;
-
     private Collection<? extends GrantedAuthority> authorities;
 
-    public UserDetailsImpl(Long id, String nombre, String apellidos, String username, String email, String password,
-                           Collection<? extends GrantedAuthority> authorities, Set<Role> roles) {
+    public UserDetailsImpl(Long id, String username, String email, String password,
+                           Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
-        this.nombre = nombre;
-        this.apellidos = apellidos;
         this.username = username;
         this.email = email;
         this.password = password;
         this.authorities = authorities;
-        this.roles = roles;
     }
 
-    public static UserDetailsImpl build(Reclutador reclutador) {
-        List<GrantedAuthority> authorities = reclutador.getRoles().stream()
+    public static UserDetailsImpl build(Reclutador user) {
+        List<GrantedAuthority> authorities = user.getRoles().stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName().name()))
                 .collect(Collectors.toList());
 
         return new UserDetailsImpl(
-                reclutador.getId(),
-                reclutador.getNombre(),
-                reclutador.getApellidos(),
-                reclutador.getUsername(),
-                reclutador.getEmail(),
-                reclutador.getPassword(),
-                authorities,
-                reclutador.getRoles()
-        );
+                user.getId(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getPassword(),
+                authorities);
     }
 
     @Override
@@ -69,7 +61,6 @@ public class UserDetailsImpl implements UserDetails {
     public String getEmail() {
         return email;
     }
-
 
     @Override
     public String getPassword() {
@@ -109,17 +100,5 @@ public class UserDetailsImpl implements UserDetails {
             return false;
         UserDetailsImpl user = (UserDetailsImpl) o;
         return Objects.equals(id, user.id);
-    }
-
-    public String getRoles() {
-        String out = "";
-        for (Role r : roles) {
-            out = r.getName().name();
-        }
-        return out;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
     }
 }

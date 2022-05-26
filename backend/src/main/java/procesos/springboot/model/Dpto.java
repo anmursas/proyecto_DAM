@@ -25,7 +25,7 @@ public class Dpto {
     @Column(name = "dpto_siglas", nullable = false)
     private String siglas;
 
-    @OneToMany(mappedBy = "elDepartamento", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "elDepartamento", fetch = FetchType.LAZY)
     @JsonIgnore
     private Set<Proceso> losProcesos;
 
