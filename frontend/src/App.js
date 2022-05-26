@@ -20,7 +20,7 @@ function App() {
 
   return (
     <div className="App">
-      <Router basename='/seleccion' >
+      <Router >
         <AuthVerify />
         <HeaderComponent />
 
