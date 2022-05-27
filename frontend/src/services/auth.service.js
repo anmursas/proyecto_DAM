@@ -1,7 +1,5 @@
 import axios from "axios";
-import Cookies from 'universal-cookie';
 
-const cookies = new Cookies();
 const API_URL = "http://localhost:8090/api/auth/";
 
 const register = (request) => {
@@ -15,9 +13,6 @@ const login = (username, password) => {
         })
         .then((response) => {
             if (response.data.accessToken) {
-
-                // cookies.set('user', JSON.stringify(response.data), { path: '/', httpOnly: false });
-                // console.log(cookies.get('user')); // Pacman
                 sessionStorage.setItem("user", JSON.stringify(response.data));
             }
             return response.data;

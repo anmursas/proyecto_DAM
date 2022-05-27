@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -12,10 +12,9 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Alert from '@mui/material/Alert';
 import AuthService from "../../services/auth.service"
-import { textAlign } from "@mui/system";
 import { IconButton, InputAdornment } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
@@ -63,11 +62,8 @@ const SignUp = () => {
 
   function handleSubmit(event) {
     event.preventDefault();
-    if (nombre && apellidos && email && password && (password == repeatedPassword)) {
-      console.log("TRUE")
+    if (nombre && apellidos && email && password && (password === repeatedPassword)) {
       AuthService.register(register).then((response) => {
-        console.log(response.data)
-        console.log(register)
         navigate("/login");
       }, (error) => {
         const resMessage =
@@ -146,8 +142,8 @@ const SignUp = () => {
                   autoComplete="email"
                   value={username}
                   onChange={(e => setUsername(e.target.value))}
-                  error={username.length == 0}
-                  helperText={username.length == 0 ? "Debes introducir un nombre de usuario" : ""}
+                  error={username.length === 0}
+                  helperText={username.length === 0 ? "Debes introducir un nombre de usuario" : ""}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -184,9 +180,9 @@ const SignUp = () => {
                   type={showPassword ? 'text' : 'password'}
                   autoComplete="new-password"
                   value={repeatedPassword}
-                  error={password != repeatedPassword}
+                  error={password !== repeatedPassword}
                   onChange={(e => setrepeatedPassword(e.target.value))}
-                  helperText={password != repeatedPassword ? "Las contraseñas no coinciden" : ""}
+                  helperText={password !== repeatedPassword ? "Las contraseñas no coinciden" : ""}
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position="end">
@@ -220,7 +216,7 @@ const SignUp = () => {
               fullWidth
               variant="contained"
               sx={{ mt: 2, mb: 2 }}
-              disabled={!(nombre && apellidos && email && password && (password == repeatedPassword))}
+              disabled={!(nombre && apellidos && email && password && (password === repeatedPassword))}
             >
               Sign Up
             </Button>

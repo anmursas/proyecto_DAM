@@ -25,7 +25,6 @@ public class CandidatosController {
     private ProcesoRepository procesoRepository;
 
     @GetMapping
-    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public List<Candidatos> getAllCandidatos() {
         return candidatosRepository.findAll();
     }

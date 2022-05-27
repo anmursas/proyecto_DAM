@@ -122,7 +122,6 @@ const UpdateProcesoComponent = () => {
     }
 
     function handleInputChange2(event, value) {
-        console.log(userValid)
         if (userValid) {
             if (value) {
                 if (candi_id.includes(value.id)) {
@@ -163,7 +162,6 @@ const UpdateProcesoComponent = () => {
     function editCandi(id) {
 
         ValuesService.getProcesoCandidatobyId(id).then((response) => {
-            console.log(response.data)
             setEntrevistado(response.data.entrevistado)
             setfEntrevista(response.data.fechaE)
             if (response.data.motivo == null) {
@@ -476,7 +474,6 @@ const UpdateProcesoComponent = () => {
 
     function updateProceso(e) {
         if (!userValid) {
-            console.log("ERROR")
         } else {
             e.preventDefault();
 
@@ -525,7 +522,6 @@ const UpdateProcesoComponent = () => {
                     "procesoCandidatos": candidatosArr,
                     "requisitos": requisitos
                 };
-                console.log(procesoLaboral)
 
                 ProcesoService.updateProceso(id, procesoLaboral).then((response) => {
                     navigate('/')
@@ -682,19 +678,15 @@ const UpdateProcesoComponent = () => {
         ValuesService.getIdFromToken().then((response) => {
             ProcesoService.getProcesoById(id).then((response1) => {
                 ValuesService.isAdmin().then((response2) => {
-                    if (response.data == response1.data.elReclutador.id) {
-                        console.log("Iguales")
+                    if (response.data === response1.data.elReclutador.id) {
                     } else {
                         if (response2.data) {
-                            // console.log(response2.data)
                         } else {
                             setOpen_1(true)
                             setUserValid(false)
                             resetButton()
                             optiones = [0]
-                            console.log("diferentes")
                             navigate("/")
-
                         }
                     }
                 })
@@ -735,7 +727,7 @@ const UpdateProcesoComponent = () => {
                                 <InputLabel id="demo-simple-select-label">Reclutador: </InputLabel>
                                 <Select disabled={!admin} onChange={(e) => setReclu_id(e.target.value)} labelId="demo-simple-select-label" id="demo-simple-select" label="Centro de trabajo" value={reclu_id}>
                                     {reclus.map(reclu => {
-                                        if (reclu.roles[0].name == "ROLE_USER")
+                                        if (reclu.roles[0].name === "ROLE_USER")
                                             return <MenuItem divider key={reclu.id} value={reclu.id} > {reclu.apellidos}, {reclu.nombre}</MenuItem>
                                     }
                                     )}
@@ -848,12 +840,12 @@ const UpdateProcesoComponent = () => {
 
                                         <TableBody>
                                             {candis.map((candidato) => {
-                                                if ((candidato.proceso.id == id) && candi_id.includes(candidato.candidatos.id))
+                                                if ((candidato.proceso.id === id) && candi_id.includes(candidato.candidatos.id))
                                                     return <TableRow hover="true" key={candidato.id} >
                                                         <TableCell>{candidato.candidatos.nombre}</TableCell>
                                                         <TableCell>{candidato.candidatos.apellido1}</TableCell>
                                                         <TableCell>{candidato.candidatos.sexo}</TableCell>
-                                                        <TableCell>{candidato.entrevistado == "NO_ENTREVISTADO" ? "NO ENTREVISTADO" : candidato.entrevistado}</TableCell>
+                                                        <TableCell>{candidato.entrevistado === "NO_ENTREVISTADO" ? "NO ENTREVISTADO" : candidato.entrevistado}</TableCell>
                                                         <TableCell>
                                                             <Stack spacing={-2} direction="row">
                                                                 <Button onClick={() => editCandi(candidato.id)}  >
@@ -896,9 +888,9 @@ const UpdateProcesoComponent = () => {
                         defaultValue="female"
                         name="radio-buttons-group"
                     >
-                        <FormControlLabel checked={entrevistado == "SÍ"} onChange={(e) => setEntrevistado(e.target.value)} value="SÍ" control={<Radio />} label="Sí" />
-                        <FormControlLabel checked={entrevistado == "NO"} onChange={(e) => setEntrevistado(e.target.value)} value="NO" control={<Radio />} label="No" />
-                        <FormControlLabel checked={entrevistado == "NO_ENTREVISTADO"} onChange={(e) => setEntrevistado(e.target.value)} value="NO_ENTREVISTADO" control={<Radio />} label="No entrevistado" />
+                        <FormControlLabel checked={entrevistado === "SÍ"} onChange={(e) => setEntrevistado(e.target.value)} value="SÍ" control={<Radio />} label="Sí" />
+                        <FormControlLabel checked={entrevistado === "NO"} onChange={(e) => setEntrevistado(e.target.value)} value="NO" control={<Radio />} label="No" />
+                        <FormControlLabel checked={entrevistado === "NO_ENTREVISTADO"} onChange={(e) => setEntrevistado(e.target.value)} value="NO_ENTREVISTADO" control={<Radio />} label="No entrevistado" />
                     </RadioGroup>
 
                     <FormControl>

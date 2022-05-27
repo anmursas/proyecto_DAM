@@ -12,7 +12,6 @@ import Profile from './components/auth/Profile';
 
 import './App.css';
 import AuthVerify from './components/AuthVerify';
-import { createBrowserHistory } from 'history';
 
 
 function App() {

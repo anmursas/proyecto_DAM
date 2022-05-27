@@ -29,4 +29,8 @@ public class Dpto {
     @JsonIgnore
     private Set<Proceso> losProcesos;
 
+    public Dpto(String nombre, String siglas) {
+        this.nombre = nombre;
+        this.siglas = siglas;
+    }
 }

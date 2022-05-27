@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate } from "react-router-dom";
 import ProcesoService from '../services/ProcesoService';
 import ValuesService from '../services/ValuesService';
-import { FormControl, InputLabel, Select, MenuItem, Button, Container, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Autocomplete, Stack, Grid, Card, CardActionArea, CardContent, Dialog, DialogContent, DialogContentText, DialogActions, Slide, DialogTitle, Alert } from '@mui/material';
+import { FormControl, InputLabel, Select, MenuItem, Button, Container, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Autocomplete, Stack, Grid, Card, CardContent, Dialog, DialogContent, DialogContentText, DialogActions, Slide, DialogTitle, Alert } from '@mui/material';
 import { ResponsivePie } from '@nivo/pie'
 
 
@@ -19,10 +19,6 @@ import AuthService from '../services/auth.service';
 
 
 const AddProcesoComponent = () => {
-
-    const Transition = React.forwardRef(function Transition(props, ref) {
-        return <Slide direction="down" ref={ref} {...props} />;
-    });
 
     // Dialogo 
     const [open, setOpen] = useState(false);
@@ -261,9 +257,6 @@ const AddProcesoComponent = () => {
         }
     }
 
-    function getCandis() {
-        ValuesService.getAllCandidatos().then((response) => { setCandidatos(response.data) })
-    }
 
 
 

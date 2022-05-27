@@ -236,8 +236,6 @@ export default function ListProcesoComponent() {
   useEffect(() => {
     ProcesoService.getAllProcesos().then((response) => {
       setRawRows(response.data)
-      console.log("###########################")
-      console.log(response.data);
     }).catch(error => {
       console.log(error);
     })

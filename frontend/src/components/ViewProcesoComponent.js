@@ -76,19 +76,16 @@ const ViewProcesoComponent = () => {
 
   let navigate = useNavigate()
 
-  const getProcesoById = () => {
+  function getProcesoById() {
     ProcesoService.getProcesoById(id).then((response) => {
-      console.log("1")
-      console.log(response.data);
       setProceso(response.data);
       setTitus(response.data.lasTitulaciones);
       setCandidatos(response.data.procesoCandidatos);
 
 
-      console.log(titulaciones)
     }).catch(error => {
-      console.log(error)
-    })
+      console.log(error);
+    });
   }
 
   function getCandis() {
@@ -130,7 +127,6 @@ const ViewProcesoComponent = () => {
         navigate("/login")
       }
       getProcesoById();
-      console.log(proceso);
     }, [])
 
   useEffect(() => {
@@ -234,15 +230,15 @@ const ViewProcesoComponent = () => {
               </TableHead>
               <TableBody>
                 <TableRow style={{ background: "#f8f9fa" }}>
-                  <TableCell>{proceso.elDepartamento.nombre}</TableCell>
-                  <TableCell>{proceso.elCentroTrabajo.nombre}</TableCell>
-                  <TableCell>{proceso.elReclutador.nombre}</TableCell>
+                  <TableCell>{proceso.elDepartamento?.nombre}</TableCell>
+                  <TableCell>{proceso.elCentroTrabajo?.nombre}</TableCell>
+                  <TableCell>{proceso.elReclutador?.nombre}</TableCell>
                   <TableCell>{proceso.fechaInicio}</TableCell>
                   <TableCell>{proceso.fechaFin}</TableCell>
-                  <TableCell>{proceso.laVinculacion.nombre}</TableCell>
-                  <TableCell>{proceso.elPuesto.nombre}</TableCell>
+                  <TableCell>{proceso.laVinculacion?.nombre}</TableCell>
+                  <TableCell>{proceso.elPuesto?.nombre}</TableCell>
                   <TableCell>{proceso.laContratacion?.nombre}</TableCell>
-                  <TableCell>{proceso.laJornada.nombre}</TableCell>
+                  <TableCell>{proceso.laJornada?.nombre}</TableCell>
                   <TableCell>{proceso.requisitos}</TableCell>
                 </TableRow>
               </TableBody>
@@ -283,7 +279,7 @@ const ViewProcesoComponent = () => {
                         <TableCell width={'10%'} align={'center'}>{titulacion.candidatos.nombre}</TableCell>
                         <TableCell width={'10%'} align={'center'}>{titulacion.candidatos.apellido1}</TableCell>
                         <TableCell width={'10%'} align={'center'}>{titulacion.candidatos.sexo}</TableCell>
-                        <TableCell width={'10%'} align={'center'}>{titulacion.entrevistado == "NO_ENTREVISTADO" ? "NO ENTERVISTADO" : titulacion.entrevistado}</TableCell>
+                        <TableCell width={'10%'} align={'center'}>{titulacion.entrevistado === "NO_ENTREVISTADO" ? "NO ENTERVISTADO" : titulacion.entrevistado}</TableCell>
                         <TableCell width={'10%'} align={'center'}>{titulacion.fechaE}</TableCell>
                         <TableCell width={'10%'} align={'center'}>{titulacion.motivo}</TableCell>
 

@@ -139,7 +139,6 @@ export default function Checkout() {
         if (!user) {
             navigate("/login");
         } else {
-            setCurrentUser(user);
             ValuesService.isAdmin().then((response) => {
                 setAdmin(response.data);
                 admin = response.data;

@@ -1,5 +1,6 @@
 package procesos.springboot.controller;
 
+import org.apache.coyote.Response;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -63,7 +64,6 @@ public class ProcesoController {
     private ProcesoCandidatosReposotory procesoCandidatosReposotory;
 
     @GetMapping
-    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public List<Proceso> getAllProceso(@NotNull HttpServletRequest request) throws IOException {
         String user = request.getRemoteUser();
         if (!(user == null)) {
@@ -91,6 +91,7 @@ public class ProcesoController {
         Reclutador r = reclutadorRepository.findByUsername(user).get();
         Set<Role> roles = r.getRoles();
         String rol = null;
+        Proceso p = new Proceso();
 
         for (Role rs : roles) {
             rol = String.valueOf(rs.getName());
@@ -105,8 +106,9 @@ public class ProcesoController {
             return null;
         } else if ((Objects.equals(proceso.getElReclutador().getUsername(), user))) {
             return ResponseEntity.ok(proceso);
+        } else {
+            return null;
         }
-        return null;
     }
 
 

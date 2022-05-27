@@ -11,6 +11,7 @@ import java.util.*;
 @Setter
 @Entity
 @Table(name = "proceso")
+@AllArgsConstructor
 public class Proceso {
 
 

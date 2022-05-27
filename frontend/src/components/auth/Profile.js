@@ -21,9 +21,8 @@ const Profile = () => {
             setId(user.id);
             setRoles(user.roles);
 
-            console.log("hay");
         }
-    }, []);
+    }, [navigate]);
 
     return (
         <div className="container">

@@ -2,6 +2,7 @@ package procesos.springboot.security.jwt;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,9 +23,11 @@ import org.slf4j.Logger;
 
 public class AuthTokenFilter extends OncePerRequestFilter {
     @Autowired
+    @Lazy
     private JwtUtils jwtUtils;
 
     @Autowired
+    @Lazy
     private UserDetailsServiceImpl userDetailsService;
 
     private static final Logger logger = LoggerFactory.getLogger(AuthTokenFilter.class);
