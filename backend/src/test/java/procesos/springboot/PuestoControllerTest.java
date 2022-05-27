@@ -44,7 +44,7 @@ public class PuestoControllerTest extends AbstractTest {
         assertEquals(200, status);
         String content = mvcResult.getResponse().getContentAsString();
         Proceso[] procesos = super.mapFromJson(content, Proceso[].class);
-        assertTrue(procesos.length < 0);
+        assertTrue(procesos.length > 0);
     }
 
 }
