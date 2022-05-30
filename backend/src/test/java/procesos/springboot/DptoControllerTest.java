@@ -59,7 +59,7 @@ public class DptoControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(3)))
-                .andExpect(jsonPath("$[2].nombre", is("TEST2")));
+                .andExpect(jsonPath("$[2].nombre", is("TEST3")));
     }
 
 }

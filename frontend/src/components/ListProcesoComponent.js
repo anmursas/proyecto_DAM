@@ -15,14 +15,7 @@ import ProcesoService from '../services/ProcesoService';
 import { useState, useEffect } from 'react'
 import { Button, Stack } from '@mui/material';
 import { useNavigate } from "react-router-dom";
-
-function parseJwt(token) {
-  try {
-    return JSON.parse(atob(token.split(".")[1]));
-  } catch (error) {
-    return null;
-  }
-}
+import {Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions} from '@mui/material';
 
 
 
@@ -48,7 +41,7 @@ function createData(id, cod, dpto, centro, reclu_id, reclu_nom, reclu_ape, fecha
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
-  }
+  } 
   if (b[orderBy] > a[orderBy]) {
     return 1;
   }
@@ -202,6 +195,12 @@ export default function ListProcesoComponent() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [rawRows, setRawRows] = useState([])
+  const [open_1, setOpen_1] = useState(false);
+
+  function handleClose(e) {
+    setOpen_1(false);
+}
+
 
 
 
@@ -234,12 +233,17 @@ export default function ListProcesoComponent() {
 
 
   useEffect(() => {
+    let isMounted = true;
+
     ProcesoService.getAllProcesos().then((response) => {
-      setRawRows(response.data)
+      if (isMounted) {
+        setRawRows(response.data)
+      }
     }).catch(error => {
+      setOpen_1(true);
       console.log(error);
     })
-
+    return() => {isMounted = false};
   }, [])
 
 
@@ -250,9 +254,11 @@ export default function ListProcesoComponent() {
       ProcesoService.getAllProcesos().then((response) => {
         setRawRows(response.data)
       }).catch(error => {
+        setOpen_1(true);
         console.log(error)
       })
     }).catch(error => {
+      setOpen_1(true);
       console.log(error)
     });
   }
@@ -398,6 +404,22 @@ export default function ListProcesoComponent() {
 
         />
       </Paper>
+
+      <Dialog
+                open={open_1}
+                onClose={handleClose}
+            >
+                <DialogTitle>ERROR</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Ha habido un error
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose}>CANCELAR</Button>
+                    <Button onClick={handleClose}>ACEPTAR</Button>
+                </DialogActions>
+            </Dialog>
 
 
     </Box>

@@ -840,7 +840,7 @@ const UpdateProcesoComponent = () => {
 
                                         <TableBody>
                                             {candis.map((candidato) => {
-                                                if ((candidato.proceso.id === id) && candi_id.includes(candidato.candidatos.id))
+                                                if ((candidato.proceso.id == id) && candi_id.includes(candidato.candidatos.id))
                                                     return <TableRow hover="true" key={candidato.id} >
                                                         <TableCell>{candidato.candidatos.nombre}</TableCell>
                                                         <TableCell>{candidato.candidatos.apellido1}</TableCell>

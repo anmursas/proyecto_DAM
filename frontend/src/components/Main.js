@@ -3,6 +3,8 @@ import Box from "@mui/material/Box";
 
 import Button from "@mui/material/Button";
 
+import { useHistory } from "react-router-dom";
+
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 import AddProcesoComponent from "./AddProcesoComponent";
@@ -13,14 +15,6 @@ import AuthService from "../services/auth.service";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import ValuesService from "../services/ValuesService";
-
-function parseJwt(token) {
-    try {
-        return JSON.parse(atob(token.split(".")[1]));
-    } catch (error) {
-        return null;
-    }
-}
 
 function getStepContent(step) {
     switch (step) {
@@ -52,7 +46,7 @@ export default function Checkout() {
     };
 
     function mostrando_() {
-        if (activeStep == 0) {
+        if (activeStep === 0) {
             if (admin) {
                 return (
                     <Box sx={{ display: "flex", justifyContent: "center" }}>
@@ -113,7 +107,7 @@ export default function Checkout() {
                     </Typography>
                 );
             }
-        } else if (activeStep == 1) {
+        } else if (activeStep === 1) {
             return (
                 <Box sx={{ display: "row", justifyContent: "center" }}>
                     <Typography

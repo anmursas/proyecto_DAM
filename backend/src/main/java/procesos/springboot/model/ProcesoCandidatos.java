@@ -42,7 +42,7 @@ public class ProcesoCandidatos {
     @Column(name = "fechaE", nullable = true)
     private Date fechaE;
 
-    public enum UserSelectionENUM {SÍ, NO, NO_ENTREVISTADO}
+    public enum UserSelectionENUM {SI, NO, NO_ENTREVISTADO}
 
 
 }
