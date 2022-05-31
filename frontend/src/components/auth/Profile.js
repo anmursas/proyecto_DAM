@@ -3,12 +3,16 @@ import { useNavigate } from "react-router-dom";
 import AuthService from "../../services/auth.service";
 
 const Profile = () => {
+
+    const navigate = useNavigate();
+    
+    // Variables del usuario
     const [accessToken, setAccessToken] = useState("");
     const [username, setUsername] = useState("");
     const [email, setMail] = useState("");
     const [id, setId] = useState("");
     const [roles, setRoles] = useState([]);
-    const navigate = useNavigate();
+
 
     useEffect(() => {
         const user = AuthService.getCurrentUser();
@@ -20,7 +24,6 @@ const Profile = () => {
             setMail(user.email);
             setId(user.id);
             setRoles(user.roles);
-
         }
     }, [navigate]);
 

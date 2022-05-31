@@ -888,7 +888,7 @@ const UpdateProcesoComponent = () => {
                         defaultValue="female"
                         name="radio-buttons-group"
                     >
-                        <FormControlLabel checked={entrevistado === "SÍ"} onChange={(e) => setEntrevistado(e.target.value)} value="SÍ" control={<Radio />} label="Sí" />
+                        <FormControlLabel checked={entrevistado === "SI"} onChange={(e) => setEntrevistado(e.target.value)} value="SI" control={<Radio />} label="SÍ" />
                         <FormControlLabel checked={entrevistado === "NO"} onChange={(e) => setEntrevistado(e.target.value)} value="NO" control={<Radio />} label="No" />
                         <FormControlLabel checked={entrevistado === "NO_ENTREVISTADO"} onChange={(e) => setEntrevistado(e.target.value)} value="NO_ENTREVISTADO" control={<Radio />} label="No entrevistado" />
                     </RadioGroup>

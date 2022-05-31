@@ -16,44 +16,38 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import InputAdornment from '@mui/material/InputAdornment';
 
 const Login = () => {
+
+    // Variables usuario y contraseña
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+
+    // Variables de uso
     const [message, setMessage] = useState("");
     const navigate = useNavigate();
     const [showPassword, setshowPassword] = useState(false);
+    
+    function handleClickShowPassword() {
+        setshowPassword(!showPassword);
+    }
 
-    const onChangeUsername = (e) => {
-        const username = e.target.value;
-        setUsername(username);
-    };
-    const onChangePassword = (e) => {
-        const password = e.target.value;
-        setPassword(password);
-    };
-
-    const handleLogin = (e) => {
+    // Funcion que envia usuario y contraseña a la API
+    function handleLogin(e) {
         e.preventDefault();
         setMessage("");
 
         AuthService.login(username, password).then(() => {
             window.location.reload(true);
         }, (error) => {
-            const resMessage =
-                (error.response &&
-                    error.response.data &&
-                    error.response.data.message) ||
+            const resMessage = (error.response &&
+                error.response.data &&
+                error.response.data.message) ||
                 error.message ||
                 error.toString();
             setMessage(resMessage);
             setPassword("");
         }
         );
-    };
-
-    const handleClickShowPassword = () => {
-        setshowPassword(!showPassword)
-    };
-
+    }
 
 
 
@@ -96,7 +90,7 @@ const Login = () => {
                         type="username"
                         autoFocus
                         value={username}
-                        onChange={onChangeUsername}
+                        onChange={(e) => setUsername(e.target.value)}
                         error={username.length === 0}
                         helperText={
                             username.length === 0
@@ -113,7 +107,7 @@ const Login = () => {
                         label="password"
                         type={showPassword ? 'text' : 'password'}
                         value={password}
-                        onChange={onChangePassword}
+                        onChange={(e) => setPassword(e.target.value)}
                         error={password.length === 0}
                         helperText={
                             password.length === 0 ? "Debes introducir una contraseña" : ""

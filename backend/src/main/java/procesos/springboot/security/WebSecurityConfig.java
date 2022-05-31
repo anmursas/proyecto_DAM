@@ -30,11 +30,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     @Lazy
     private AuthEntryPointJwt unauthorizedHandler;
+
     @Autowired
     @Lazy
     private UserDetailsServiceImpl userDetailsService;
-
-
 
     @Bean
     public AuthTokenFilter authenticationJwtTokenFilter() {

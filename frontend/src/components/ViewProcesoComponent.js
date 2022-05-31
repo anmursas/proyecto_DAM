@@ -294,14 +294,67 @@ const ViewProcesoComponent = () => {
 
       <Box sx={{ marginLeft: '30%', marginRight: '30%' }} >
         <Paper>
-          {
-            titus_()
-          }
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell align={'center'} style={{ fontWeight: 'bold' }}>Titulacion</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+
+                {
+                  titulaciones.map(
+                    titulacion =>
+                      <TableRow style={{ background: "#f8f9fa" }}>
+                        <TableCell align={'center'}>{titulacion.nombre}</TableCell>
+                      </TableRow>
+                  )
+                }
+
+              </TableBody>
+            </Table>
+          </TableContainer>
         </Paper>
       </Box>
-      {
-        candis_()
-      }
+
+      <h3> Candidatos</h3>
+      <Box sx={{ marginLeft: '30%', marginRight: '30%' }} >
+        <Paper>
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell align={'center'} style={{ fontWeight: 'bold' }}>NOMBRE</TableCell>
+                  <TableCell align={'center'} style={{ fontWeight: 'bold' }}>APELLIDO</TableCell>
+                  <TableCell align={'center'} style={{ fontWeight: 'bold' }}>SEXO</TableCell>
+                  <TableCell align={'center'} style={{ fontWeight: 'bold' }}>ENTREVISTA</TableCell>
+                  <TableCell align={'center'} style={{ fontWeight: 'bold' }}>FECHA ENTERVISTA</TableCell>
+                  <TableCell align={'center'} style={{ fontWeight: 'bold' }}>MOTIVO DESCARTE</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+
+                {
+                  candidatos.map(
+                    titulacion =>
+                      <TableRow hover key={titulacion.id} style={{ background: "#f8f9fa" }}>
+                        <TableCell width={'10%'} align={'center'}>{titulacion.candidatos.nombre}</TableCell>
+                        <TableCell width={'10%'} align={'center'}>{titulacion.candidatos.apellido1}</TableCell>
+                        <TableCell width={'10%'} align={'center'}>{titulacion.candidatos.sexo}</TableCell>
+                        <TableCell width={'10%'} align={'center'}>{titulacion.entrevistado === "NO_ENTREVISTADO" ? "NO ENTERVISTADO" : titulacion.entrevistado}</TableCell>
+                        <TableCell width={'10%'} align={'center'}>{titulacion.fechaE}</TableCell>
+                        <TableCell width={'10%'} align={'center'}>{titulacion.motivo}</TableCell>
+
+                      </TableRow>
+
+                  )
+                }
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Paper>
+      </Box>
 
 
 

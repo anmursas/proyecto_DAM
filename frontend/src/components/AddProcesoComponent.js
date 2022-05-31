@@ -4,22 +4,17 @@ import ProcesoService from '../services/ProcesoService';
 import ValuesService from '../services/ValuesService';
 import { FormControl, InputLabel, Select, MenuItem, Button, Container, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Autocomplete, Stack, Grid, Card, CardContent, Dialog, DialogContent, DialogContentText, DialogActions, DialogTitle, Alert } from '@mui/material';
 import { ResponsivePie } from '@nivo/pie'
-
-
 import TextField from '@mui/material/TextField';
 import Paper from '@mui/material/Paper';
-
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import AuthService from '../services/auth.service';
 
 
-
-
-
-
 const AddProcesoComponent = () => {
 
+    let navigate = useNavigate()
+    
     // Dialogo 
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState("");
@@ -31,7 +26,6 @@ const AddProcesoComponent = () => {
     const handleClose = () => {
         setOpen(false);
     };
-
 
     // Esto son los desplegables que se muestran, guardamos todos los objetos
     // pero solo mostramos el nombre
@@ -45,8 +39,8 @@ const AddProcesoComponent = () => {
     const [titulaciones, setTitulaciones] = useState([])
     const [candidatos, setCandidatos] = useState([])
 
+    // Variable rellenada con 
     var optiones = []
-
 
     // Guardamos el id de cada campo para el insert o el update
     const [dpto_id, setDpto_id] = useState('')
@@ -78,9 +72,7 @@ const AddProcesoComponent = () => {
             "value": puestoT.mujeres,
             "color": "#1f1161"
         },
-
     ];
-    let navigate = useNavigate()
 
     var percentil = Math.trunc((100 * puestoT.mujeres) / (puestoT.hombres + puestoT.mujeres), 3)
 

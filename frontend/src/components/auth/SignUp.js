@@ -22,6 +22,9 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 const SignUp = () => {
 
+  const navigate = useNavigate();
+
+  // Variables de usuario
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -29,6 +32,12 @@ const SignUp = () => {
   const [apellidos, setApellidos] = useState("");
   const [role, setRole] = useState(["user"])
 
+  // Variables de componente
+  const [repeatedPassword, setrepeatedPassword] = useState("");
+  const [showPassword, setshowPassword] = useState(false)
+  const [message, setMessage] = useState("");
+  
+  // Objeto a registrar
   const register = {
     username: username,
     nombre: nombre,
@@ -37,27 +46,21 @@ const SignUp = () => {
     password: password,
     role: role
   }
+  
+  // Password visibility
+  function handleClickShowPassword() {
+    setshowPassword(!showPassword);
+  }
 
-  const [repeatedPassword, setrepeatedPassword] = useState("");
-
-  const [showPassword, setshowPassword] = useState(false)
-
-  const [message, setMessage] = useState("");
-  const navigate = useNavigate();
-  const theme = createTheme();
-
-  const handleClickShowPassword = () => {
-    setshowPassword(!showPassword)
-  };
-
+  // TEMPORAL
   function onChangeRole(e) {
-    var checked = e.target.checked;
-    if (checked) {
-      setRole(["admin"]);
-    } else {
-      setRole(["user"]);
-    }
-
+    setRole(["user"])
+    // var checked = e.target.checked;
+    // if (checked) {
+    //   setRole(["admin"]);
+    // } else {
+    //   setRole(["user"]);
+    // }
   }
 
   function handleSubmit(event) {
@@ -77,15 +80,10 @@ const SignUp = () => {
     } else {
 
     }
-
-
-
-
-  }
+  }z
 
 
   return (
-    <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -228,7 +226,6 @@ const SignUp = () => {
           </Box>
         </Box>
       </Container>
-    </ThemeProvider>
   );
 
 }
