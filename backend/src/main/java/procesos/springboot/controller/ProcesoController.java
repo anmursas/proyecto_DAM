@@ -1,13 +1,10 @@
 package procesos.springboot.controller;
 
-import org.apache.coyote.Response;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import procesos.springboot.exception.ResourceNotFoundException;
 import procesos.springboot.model.Proceso;
 import procesos.springboot.model.ProcesoCandidatos;
 import procesos.springboot.model.Reclutador;
@@ -17,11 +14,13 @@ import procesos.springboot.security.jwt.JwtUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/proceso")
@@ -133,6 +132,27 @@ public class ProcesoController {
         return proceso;
     }
 
+    @PostMapping("/date")
+    public ResponseEntity<Proceso> findByDate(@RequestBody String dates) {
+        System.out.println(dates);
+
+        String[] splitted = dates.split("\"");
+
+        for (int i = 0; i < splitted.length; i++) {
+            System.out.println(splitted[i]);
+
+        }
+        String fecha1 = splitted[3];
+        String fecha2 = splitted[7];
+        System.out.println("Fecha 1 = " + fecha1);
+        System.out.println("Fecha 2 = " + fecha2);
+
+
+
+        return null;
+    }
+
+
     @PutMapping("{id}")
     public ResponseEntity<Proceso> updateProceso(@PathVariable Long id, /* El que creamos en el cliente */ @RequestBody Proceso procesoDetails, HttpServletRequest request) {
 
@@ -206,5 +226,6 @@ public class ProcesoController {
 
         return procesoRepository.findByReclu(id);
     }
+
 
 }

@@ -1,21 +1,13 @@
 import React, { useState, useEffect } from "react";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import Link from "@mui/material/Link";
-import Box from "@mui/material/Box";
-import { IconButton } from "@mui/material"
+import { Avatar, Button, TextField, Link, Box, IconButton, Typography, Container, InputAdornment, Alert } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
 import { useNavigate } from "react-router-dom";
-import Alert from "@mui/material/Alert";
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import AuthService from "../../services/auth.service";
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import InputAdornment from '@mui/material/InputAdornment';
 
 const Login = () => {
+
+    const navigate = useNavigate();
 
     // Variables usuario y contraseña
     const [username, setUsername] = useState("");
@@ -23,12 +15,7 @@ const Login = () => {
 
     // Variables de uso
     const [message, setMessage] = useState("");
-    const navigate = useNavigate();
     const [showPassword, setshowPassword] = useState(false);
-    
-    function handleClickShowPassword() {
-        setshowPassword(!showPassword);
-    }
 
     // Funcion que envia usuario y contraseña a la API
     function handleLogin(e) {
@@ -45,6 +32,7 @@ const Login = () => {
                 error.toString();
             setMessage(resMessage);
             setPassword("");
+            setUsername("")
         }
         );
     }
@@ -116,7 +104,7 @@ const Login = () => {
                             endAdornment: (
                                 <InputAdornment position="end">
                                     <IconButton
-                                        onClick={handleClickShowPassword}
+                                        onClick={(e) => setshowPassword(!showPassword)}
                                         edge="end"
                                     >
                                         {showPassword ? <VisibilityOff /> : <Visibility />}

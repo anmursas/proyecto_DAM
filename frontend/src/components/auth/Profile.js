@@ -5,9 +5,8 @@ import AuthService from "../../services/auth.service";
 const Profile = () => {
 
     const navigate = useNavigate();
-    
+
     // Variables del usuario
-    const [accessToken, setAccessToken] = useState("");
     const [username, setUsername] = useState("");
     const [email, setMail] = useState("");
     const [id, setId] = useState("");
@@ -19,32 +18,27 @@ const Profile = () => {
         if (!user) {
             navigate("/login");
         } else {
-            setAccessToken(user.accessToken);
             setUsername(user.username);
             setMail(user.email);
             setId(user.id);
             setRoles(user.roles);
         }
-    }, [navigate]);
+    }, []);
 
     return (
-        <div className="container">
-            <header className="jumbotron">
+        <div>
+            <header>
                 <h3>
                     <strong>{username}</strong> Profile
                 </h3>
             </header>
-            <p>
-                <strong>Token:</strong> {accessToken.substring(0, 20)} ...{" "}
-                {accessToken.substr(accessToken.length - 20)}
-            </p>
             <p>
                 <strong>Id:</strong> {id}
             </p>
             <p>
                 <strong>Email:</strong> {email}
             </p>
-            <strong>Authorities:</strong>
+            <strong>Rol:</strong>
             <ul>
                 {roles && roles.map((role, index) => <li key={index}>{role}</li>)}
             </ul>

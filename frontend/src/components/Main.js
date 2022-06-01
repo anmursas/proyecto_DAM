@@ -71,7 +71,6 @@ export default function Checkout() {
                                 id="nueva-imputacion"
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="rgb(31, 17, 97)"
-                                className="bi-plus-square b-icon bi text-primary"
                                 style={{ height: 32, width: 32 }}
                             >
                                 <g>

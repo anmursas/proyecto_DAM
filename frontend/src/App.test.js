@@ -17,7 +17,7 @@ import Main from './components/Main';
 
 it('login without crashing', () => {
   const div = document.createElement('App');
-  ReactDOM.render(<Main />, div);
+  ReactDOM.render(<App />, div);
   ReactDOM.unmountComponentAtNode(div);
 })
 // it('profile without crashing', () => {

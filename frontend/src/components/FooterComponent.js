@@ -5,7 +5,7 @@ import Link from "@mui/material/Link";
 export const FooterComponent = () => {
     return (
         <div>
-            <footer className="footer">
+            <footer>
                 <Typography
                     variant="body2"
                     color="text.secondary"

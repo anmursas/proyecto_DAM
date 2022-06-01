@@ -1,24 +1,9 @@
 import React, { useState } from "react";
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
+import { IconButton, InputAdornment, Typography, Box, Container, Alert, Avatar, Button, CssBaseline, TextField, Link, Grid } from "@mui/material";
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useNavigate } from 'react-router-dom';
-import Alert from '@mui/material/Alert';
-import AuthService from "../../services/auth.service"
-import { IconButton, InputAdornment } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-
-
+import { useNavigate } from 'react-router-dom';
+import AuthService from "../../services/auth.service"
 
 const SignUp = () => {
 
@@ -36,8 +21,8 @@ const SignUp = () => {
   const [repeatedPassword, setrepeatedPassword] = useState("");
   const [showPassword, setshowPassword] = useState(false)
   const [message, setMessage] = useState("");
-  
-  // Objeto a registrar
+
+  // Usuario a registrar
   const register = {
     username: username,
     nombre: nombre,
@@ -46,26 +31,11 @@ const SignUp = () => {
     password: password,
     role: role
   }
-  
-  // Password visibility
-  function handleClickShowPassword() {
-    setshowPassword(!showPassword);
-  }
 
-  // TEMPORAL
-  function onChangeRole(e) {
-    setRole(["user"])
-    // var checked = e.target.checked;
-    // if (checked) {
-    //   setRole(["admin"]);
-    // } else {
-    //   setRole(["user"]);
-    // }
-  }
-
+  // Envía petición POST a la API para dar de alta un nuevo usuario 
   function handleSubmit(event) {
-    event.preventDefault();
-    if (nombre && apellidos && email && password && (password === repeatedPassword)) {
+    event.preventDefault(); // Para que no haga el submit directamente
+    if (nombre && apellidos && email && password && (password === repeatedPassword)) { // Comprobamos que los valores son correctos
       AuthService.register(register).then((response) => {
         navigate("/login");
       }, (error) => {
@@ -80,152 +50,142 @@ const SignUp = () => {
     } else {
 
     }
-  }z
-
-
+  }
+  
   return (
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <Box
-          sx={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign up
-          </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  required
-                  fullWidth
-                  label="Nombre"
-                  autoFocus
-                  value={nombre}
-                  onChange={(e => setNombre(e.target.value))}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  required
-                  fullWidth
-                  label="Apellido(s)"
-                  value={apellidos}
-                  onChange={(e => setApellidos(e.target.value))}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  label="Email"
-                  value={email}
-                  onChange={(e => setEmail(e.target.value))}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  label="username"
-                  name="email"
-                  autoComplete="email"
-                  value={username}
-                  onChange={(e => setUsername(e.target.value))}
-                  error={username.length === 0}
-                  helperText={username.length === 0 ? "Debes introducir un nombre de usuario" : ""}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  label="password"
-                  type={showPassword ? 'text' : 'password'}
-                  autoComplete="new-password"
-                  value={password}
-                  onChange={(e => setPassword(e.target.value))}
-                  error={password.length === 0 || password.length <= 8}
-                  helperText={password.length === 0 || password.length <= 8 ? "La contraseña debe tener mínimo 8 caracteres" : ""}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                          onClick={handleClickShowPassword}
-                          edge="end"
-                        >
-                          {showPassword ? <VisibilityOff /> : <Visibility />}
-
-                        </IconButton>
-                      </InputAdornment>
-                    )
-                  }} />
-              </Grid>
-
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  label="repeat password"
-                  type={showPassword ? 'text' : 'password'}
-                  autoComplete="new-password"
-                  value={repeatedPassword}
-                  error={password !== repeatedPassword}
-                  onChange={(e => setrepeatedPassword(e.target.value))}
-                  helperText={password !== repeatedPassword ? "Las contraseñas no coinciden" : ""}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                          onClick={handleClickShowPassword}
-                          edge="end"
-                        >
-                          {showPassword ? <VisibilityOff /> : <Visibility />}
-
-                        </IconButton>
-                      </InputAdornment>
-                    )
-                  }} />
-              </Grid>
-
-
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={<Checkbox value="allowExtraEmails" onClick={(e) => onChangeRole(e)} color="primary" />}
-                  label="ADMINISTRADOR"
-                />
-              </Grid>
+    <Container component="main" maxWidth="xs">
+      <Box
+        sx={{
+          marginTop: 8,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
+      >
+        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+          <LockOutlinedIcon />
+        </Avatar>
+        <Typography component="h1" variant="h5">
+          Sign up
+        </Typography>
+        <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                required
+                fullWidth
+                label="Nombre"
+                autoFocus
+                value={nombre}
+                onChange={(e => setNombre(e.target.value))}
+              />
             </Grid>
-            {message && (
-              <Alert severity="error">
-                {message}
-              </Alert>
-            )}
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 2, mb: 2 }}
-              disabled={!(nombre && apellidos && email && password && (password === repeatedPassword))}
-            >
-              Sign Up
-            </Button>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                required
+                fullWidth
+                label="Apellido(s)"
+                value={apellidos}
+                onChange={(e => setApellidos(e.target.value))}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                required
+                fullWidth
+                label="Email"
+                value={email}
+                onChange={(e => setEmail(e.target.value))}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                label="Nombre de usuario"
+                name="email"
+                autoComplete="email"
+                value={username}
+                onChange={(e => setUsername(e.target.value))}
+                error={username.length === 0}
+                helperText={username.length === 0 ? "Debes introducir un nombre de usuario" : ""}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                required
+                fullWidth
+                label="Contraseña"
+                type={showPassword ? 'text' : 'password'}
+                autoComplete="new-password"
+                value={password}
+                onChange={(e => setPassword(e.target.value))}
+                error={password.length === 0 || password.length <= 8}
+                helperText={password.length === 0 || password.length <= 8 ? "La contraseña debe tener mínimo 8 caracteres" : ""}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={(e) => setshowPassword(!showPassword)}
+                        edge="end"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
 
-            <Link onClick={(e) => navigate("/login")} variant="body2">
-              Already have an account? Sign in
-            </Link>
+                      </IconButton>
+                    </InputAdornment>
+                  )
+                }} />
+            </Grid>
 
-          </Box>
+            <Grid item xs={12}>
+              <TextField
+                required
+                fullWidth
+                label="Repita la contraseña"
+                type={showPassword ? 'text' : 'password'}
+                autoComplete="new-password"
+                value={repeatedPassword}
+                error={password !== repeatedPassword}
+                onChange={(e => setrepeatedPassword(e.target.value))}
+                helperText={password !== repeatedPassword ? "Las contraseñas no coinciden" : ""}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={(e) => setshowPassword(!showPassword)}
+                        edge="end"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+
+                      </IconButton>
+                    </InputAdornment>
+                  )
+                }} />
+            </Grid>
+          </Grid>
+          {message && (
+            <Alert severity="error">
+              {message}
+            </Alert>
+          )}
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 2, mb: 2 }}
+            disabled={!(nombre && apellidos && email && password && (password === repeatedPassword))}
+          >
+            Sign Up
+          </Button>
+
+          <Link onClick={(e) => navigate("/login")} variant="body2">
+            Already have an account? Sign in
+          </Link>
+
         </Box>
-      </Container>
+      </Box>
+    </Container>
   );
 
 }

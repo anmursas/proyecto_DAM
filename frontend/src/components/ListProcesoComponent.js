@@ -13,13 +13,16 @@ import Paper from '@mui/material/Paper';
 import { visuallyHidden } from '@mui/utils';
 import ProcesoService from '../services/ProcesoService';
 import { useState, useEffect } from 'react'
-import { Button, Stack } from '@mui/material';
+import { Button, Input, Stack, TextField } from '@mui/material';
 import { useNavigate } from "react-router-dom";
-import {Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions} from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material';
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 
 
 
-function createData(id, cod, dpto, centro, reclu_id, reclu_nom, reclu_ape, fechaI, fechaF, vincu, puesto, jl, jl_hs, req) {
+
+function createData(id, cod, dpto, centro, reclu_id, reclu_nom, reclu_ape, fechaI, fechaF, vincu, puesto, jl, jl_hs) {
   return {
     id,
     cod,
@@ -33,15 +36,14 @@ function createData(id, cod, dpto, centro, reclu_id, reclu_nom, reclu_ape, fecha
     vincu,
     puesto,
     jl,
-    jl_hs,
-    //req
+    jl_hs
   };
 }
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
-  } 
+  }
   if (b[orderBy] > a[orderBy]) {
     return 1;
   }
@@ -129,13 +131,7 @@ const headCells = [
     numeric: false,
     disablePadding: false,
     label: 'JORNADA',
-  },
-  // {
-  //   id: 'req',
-  //   numeric: false,
-  //   disablePadding: false,
-  //   label: 'REQUISITOS',
-  // },
+  }
 ];
 
 
@@ -155,7 +151,7 @@ function EnhancedTableHead(props) {
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align={headCell.numeric ? 'left' : 'left'}
+            align='left'
             padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
             style={{ fontWeight: 'bold' }}
@@ -196,10 +192,12 @@ export default function ListProcesoComponent() {
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [rawRows, setRawRows] = useState([])
   const [open_1, setOpen_1] = useState(false);
+  const [fecha1, setFecha1] = useState("");
+  const [fecha2, setFecha2] = useState("");
 
   function handleClose(e) {
     setOpen_1(false);
-}
+  }
 
 
 
@@ -224,7 +222,6 @@ export default function ListProcesoComponent() {
         rawRows[index].elPuesto.nombre,
         rawRows[index].laJornada.nombre,
         rawRows[index].laJornada.horaSemanal,
-        //rawRows[index].requisitos
       )
     )
 
@@ -233,17 +230,12 @@ export default function ListProcesoComponent() {
 
 
   useEffect(() => {
-    let isMounted = true;
-
     ProcesoService.getAllProcesos().then((response) => {
-      if (isMounted) {
-        setRawRows(response.data)
-      }
+      setRawRows(response.data)
     }).catch(error => {
       setOpen_1(true);
       console.log(error);
     })
-    return() => {isMounted = false};
   }, [])
 
 
@@ -305,8 +297,35 @@ export default function ListProcesoComponent() {
 
   return (
     <Box sx={{ border: 0, padding: '5px 15px 5px 15px' }}>
+      <Box sx={{ mb: 2, mt: 2, display: "flex", justifyContent: "center" }}>
+        <LocalizationProvider dateAdapter={AdapterDateFns} dateFormat>
+          <Stack spacing={2} direction="row">
+            <DatePicker
+              inputFormat="dd/MM/yyyy"
+              label="Fecha Inicio"
+              views={['year', 'month', 'day']}
+              value={fecha1}
+              onChange={(e) => setFecha1(e)}
+              renderInput={(params) => <TextField  {...params} style={{ backgroundColor: 'white' }} />}
+            />
+
+            <DatePicker
+              inputFormat="dd/MM/yyyy"
+              label="Fecha Inicio"
+              views={['year', 'month', 'day']}
+              value={fecha2}
+              onChange={(e) => setFecha2(e)}
+              renderInput={(params) => <TextField  {...params} style={{ backgroundColor: 'white' }} />}
+            />
+
+            <Button> Buscar </Button>
+          </Stack>
+        </LocalizationProvider>
+
+      </Box>
+
+
       <Paper sx={{ width: '100%', mb: 2 }}>
-        {/* <EnhancedTableToolbar /> */}
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
@@ -357,21 +376,21 @@ export default function ListProcesoComponent() {
                       <TableCell>
                         <Stack spacing={-2} direction="row">
                           <Button onClick={() => handleEdit(row.id)}  >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="grey" className="bi bi-pencil-square text-dark" viewBox="0 0 16 16">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="grey" viewBox="0 0 16 16">
                               <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
                               <path fillRule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
                             </svg>
                           </Button>
 
                           <Button onClick={() => handleView(row.id)} >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="dark-grey" className="bi bi-eye-fill text-dark" viewBox="0 0 16 16">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="dark-grey" viewBox="0 0 16 16">
                               <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z" />
                               <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z" />
                             </svg>
                           </Button>
 
                           <Button onClick={() => deleteProceso(row.id)} >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="grey" className="bi-trash-fill b-icon bi text-dark" viewBox="0 0 16 16" >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="grey" viewBox="0 0 16 16" >
                               <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z" />
 
                             </svg>
@@ -401,25 +420,26 @@ export default function ListProcesoComponent() {
           page={page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
+          labelRowsPerPage={"Filas por página"}
 
         />
       </Paper>
 
       <Dialog
-                open={open_1}
-                onClose={handleClose}
-            >
-                <DialogTitle>ERROR</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        Ha habido un error
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose}>CANCELAR</Button>
-                    <Button onClick={handleClose}>ACEPTAR</Button>
-                </DialogActions>
-            </Dialog>
+        open={open_1}
+        onClose={(e) => setOpen_1(false)}
+      >
+        <DialogTitle>ERROR</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Ha habido un error
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>CANCELAR</Button>
+          <Button onClick={handleClose}>ACEPTAR</Button>
+        </DialogActions>
+      </Dialog>
 
 
     </Box>
