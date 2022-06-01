@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import procesos.springboot.exception.ResourceNotFoundException;
 import procesos.springboot.model.Proceso;
 import procesos.springboot.model.ProcesoCandidatos;
 import procesos.springboot.model.Reclutador;
