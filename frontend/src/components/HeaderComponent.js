@@ -53,7 +53,7 @@ const HeaderComponent = () => {
                 return (
                     <div>
                         <MenuItem onClick={(e) => profile(e)}>Profile</MenuItem>
-                        <MenuItem onClick={(e) => handleOpen(e)}>Add Candidatos</MenuItem>
+                        <MenuItem onClick={(e) => handleOpen(e)}>Candidatos</MenuItem>
                     </div>
                 );
             } else {
@@ -93,8 +93,9 @@ const HeaderComponent = () => {
     }
 
     function handleOpen(e) {
+        navigate("/candidatos")
         setAnchorEl(null);
-        setOpen(true);
+        // setOpen(true);
     }
 
     function goTo(e) {

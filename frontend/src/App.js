@@ -12,6 +12,7 @@ import Profile from './components/auth/Profile';
 
 import './App.css';
 import AuthVerify from './components/AuthVerify';
+import AdminCandidatosComponent from './components/AdminCandidatosComponent';
 
 
 function App() {
@@ -32,6 +33,7 @@ function App() {
           <Route path='/add-proceso' element={<AddProcesoComponent />}></Route>
           <Route path='/edit-proceso/:id' element={<UpdateProcesoComponent />}></Route>
           <Route path='/view-proceso/:id' element={<ViewProcesoComponent />}></Route>
+          <Route path='/candidatos' element={<AdminCandidatosComponent />}></Route>
         </Routes>
 
 
