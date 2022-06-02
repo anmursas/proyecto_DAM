@@ -10,18 +10,7 @@ import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import logo from "../resources/logo.png";
 import { Settings } from "@mui/icons-material";
-import {
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
-    FormControlLabel,
-    FormGroup,
-    Radio,
-    RadioGroup,
-    TextField,
-} from "@mui/material";
+import { FormGroup } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import ValuesService from "../services/ValuesService";
 import AuthService from "../services/auth.service";
@@ -33,13 +22,7 @@ const HeaderComponent = () => {
     const [admin, setAdmin] = useState("");
     let navigate = useNavigate();
 
-    // New/Update Candidato
-    const [candi_name, setCandName] = useState("");
-    const [candi_ape, setCandApe] = useState("");
-    const [candi_sexo, setCandSex] = useState("");
-
     const [anchorEl, setAnchorEl] = useState(null);
-    const [open, setOpen] = useState(false);
 
     function profile() {
         navigate("/profile");
@@ -75,27 +58,12 @@ const HeaderComponent = () => {
 
     function handleClose() {
         setAnchorEl(null);
-        setOpen(false);
     }
 
-    function handleSubmit() {
-        const candi = {
-            nombre: candi_name,
-            apellido1: candi_ape,
-            sexo: candi_sexo,
-        };
-        ValuesService.createCandidato(candi)
-            .then((response) => { })
-            .catch((error) => {
-                console.log(error);
-            });
-        setOpen(false);
-    }
 
     function handleOpen(e) {
         navigate("/candidatos")
         setAnchorEl(null);
-        // setOpen(true);
     }
 
     function goTo(e) {
@@ -199,60 +167,6 @@ const HeaderComponent = () => {
                     </div>
                 </Toolbar>
             </AppBar>
-
-            <Dialog open={open} onClose={handleClose}>
-                <DialogTitle>Candidato</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>Candidato Nuevo</DialogContentText>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        id="nombre"
-                        label="Nombre"
-                        type="text"
-                        fullWidth
-                        variant="standard"
-                        onChange={(e) => setCandName(e.target.value)}
-                    />
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        id="name"
-                        label="Apellido"
-                        type="text"
-                        fullWidth
-                        variant="standard"
-                        onChange={(e) => setCandApe(e.target.value)}
-                    />
-                    <RadioGroup
-                        aria-labelledby="demo-radio-buttons-group-label"
-                        defaultValue="female"
-                        name="radio-buttons-group"
-                    >
-                        <FormControlLabel
-                            onChange={(e) => setCandSex(e.target.value)}
-                            value="F"
-                            control={<Radio />}
-                            label="Mujer"
-                        />
-                        <FormControlLabel
-                            onChange={(e) => setCandSex(e.target.value)}
-                            value="M"
-                            control={<Radio />}
-                            label="Hombre"
-                        />
-                    </RadioGroup>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose}>Cancel</Button>
-                    <Button
-                        disabled={!(candi_name && candi_ape && candi_sexo)}
-                        onClick={handleSubmit}
-                    >
-                        Crear
-                    </Button>
-                </DialogActions>
-            </Dialog>
         </Box>
     );
 };

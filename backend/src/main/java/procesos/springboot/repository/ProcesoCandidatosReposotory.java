@@ -11,4 +11,8 @@ public interface ProcesoCandidatosReposotory extends JpaRepository<ProcesoCandid
     @Modifying
     @Query("Delete from ProcesoCandidatos where proceso_id=(:ids) and cand_id=(:cand)")
     int deleteByIds(@Param("ids") Long id, @Param("cand") Long cand);
+
+    @Modifying
+    @Query("DELETE from ProcesoCandidatos where cand_id=(:cand)")
+    int deleteByCandi(@Param("cand") Long cand);
 }

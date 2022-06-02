@@ -1,4 +1,4 @@
-import { Button, Card, CardContent, Grid, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
+import { Button, Card, CardContent, Dialog, DialogContent, RadioGroup, FormControlLabel, Radio, DialogActions, TextField, DialogContentText, DialogTitle, Grid, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import { ResponsivePie } from '@nivo/pie';
 import React, { useState, useEffect } from 'react';
@@ -14,6 +14,15 @@ const AdminCandidatosComponent = () => {
     const [hombres, setHombres] = useState(0)
     const [mujeres, setMujeres] = useState(0)
 
+    // New/Update Candidato
+    const [candi_name, setCandName] = useState("");
+    const [candi_ape, setCandApe] = useState("");
+    const [candi_sexo, setCandSex] = useState("");
+
+    const [open, setOpen] = useState(false);
+
+
+
     const data = [
         {
             "id": "Hombres",
@@ -28,6 +37,43 @@ const AdminCandidatosComponent = () => {
             "color": "#1f1161"
         },
     ];
+
+    function deleteCandidato(id) {
+        ValuesService.deleteCandidato(id).then((response) => {
+            window.location.reload(true)
+        }).catch(error => {
+            console.log(error)
+        })
+        console.log(id)
+    }
+
+    function handleClose() {
+        setOpen(false);
+    }
+
+    function handleSubmit() {
+        const candi = {
+            nombre: candi_name,
+            apellido1: candi_ape,
+            sexo: candi_sexo,
+        };
+        ValuesService.createCandidato(candi).then((response) => {
+            window.location.reload(true);
+        }).catch((error) => {
+            console.log(error);
+        });
+        setOpen(false);
+    }
+
+    function per_mujer() {
+        if (percentil > 50) {
+            return <h1 style={{ fontSize: "600%", color: "#86dc3d" }}>{percentil}%</h1>
+
+        } else {
+            return <h1 style={{ fontSize: "600%", color: "#f20000" }}>{percentil}%</h1>
+
+        }
+    }
 
     useEffect(() => {
         const user = AuthService.getCurrentUser();
@@ -61,20 +107,12 @@ const AdminCandidatosComponent = () => {
 
     }, [candidatos])
 
-    function per_mujer() {
-        if (percentil > 50) {
-            return <h1 style={{ fontSize: "600%", color: "#86dc3d" }}>{percentil}%</h1>
 
-        } else {
-            return <h1 style={{ fontSize: "600%", color: "#f20000" }}>{percentil}%</h1>
-
-        }
-    }
 
 
 
     function percentil_() {
-        return <Grid container spacing={2} sx={{mt:2}}>
+        return <Grid container spacing={2} sx={{ mt: 2 }}>
 
             <Grid item xs>
                 <Card >
@@ -185,7 +223,7 @@ const AdminCandidatosComponent = () => {
                 >
                     Candidatos
                 </Typography>
-                <Button sx={{ mr: 8 }}>
+                <Button onClick={(e) => setOpen(true)} sx={{ mr: 8 }}>
                     <svg data-v-1f90038a="" viewBox="0 0 16 16" width="1em" height="1em" focusable="false" role="img" alt="icon" id="nueva-imputacion" xmlns="http://www.w3.org/2000/svg" fill="rgb(31, 17, 97)" style={{ height: 32, width: 32 }}>
                         <g>
                             <path fillRule="evenodd" d="M8 3.5a.5.5 0 01.5.5v4a.5.5 0 01-.5.5H4a.5.5 0 010-1h3.5V4a.5.5 0 01.5-.5z" clipRule="evenodd"></path>
@@ -209,33 +247,30 @@ const AdminCandidatosComponent = () => {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {candidatos.map((candidato) => {
-                                    return <TableRow hover="true" key={candidato.id}>
+                                {candidatos.map((candidato, index) => {
+                                    return <TableRow style={index % 2 ? { background: "#f8f9fa" } : { background: "#ebeced" }}
+                                        hover="true" key={candidato.id}>
                                         <TableCell>{candidato.nombre}</TableCell>
                                         <TableCell>{candidato.apellido1}</TableCell>
                                         <TableCell>{candidato.sexo}</TableCell>
                                         <TableCell align='left'>
-                                            <Stack direction="row">
-                                                <Button>
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="grey" viewBox="0 0 16 16">
-                                                        <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-                                                        <path fillRule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
-                                                    </svg>
-                                                </Button>
-                                                <Button>
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="dark-grey" viewBox="0 0 16 16">
-                                                        <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z" />
-                                                        <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z" />
-                                                    </svg>
-                                                </Button>
-                                                <Button>
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="grey" viewBox="0 0 16 16" >
-                                                        <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z" />
+                                            <div>
+                                                <Stack direction="row">
+                                                    <Button >
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="grey" viewBox="0 0 16 16">
+                                                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                                                            <path fillRule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
+                                                        </svg>
+                                                    </Button>
+                                                    <Button onClick={(e) => deleteCandidato(candidato.id)}>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="grey" viewBox="0 0 16 16" >
+                                                            <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z" />
 
-                                                    </svg>
-                                                </Button>
+                                                        </svg>
+                                                    </Button>
 
-                                            </Stack>
+                                                </Stack>
+                                            </div>
                                         </TableCell>
 
                                     </TableRow>
@@ -251,6 +286,59 @@ const AdminCandidatosComponent = () => {
                     percentil_()
                 }
             </Box>
+
+            <Dialog open={open} onClose={handleClose}>
+                <DialogTitle>Candidato</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>Candidato Nuevo</DialogContentText>
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        id="nombre"
+                        label="Nombre"
+                        type="text"
+                        fullWidth
+                        variant="standard"
+                        onChange={(e) => setCandName(e.target.value)}
+                    />
+                    <TextField
+                        margin="dense"
+                        id="name"
+                        label="Apellido"
+                        type="text"
+                        fullWidth
+                        variant="standard"
+                        onChange={(e) => setCandApe(e.target.value)}
+                    />
+                    <RadioGroup
+                        aria-labelledby="demo-radio-buttons-group-label"
+                        defaultValue="female"
+                        name="radio-buttons-group"
+                    >
+                        <FormControlLabel
+                            onChange={(e) => setCandSex(e.target.value)}
+                            value="F"
+                            control={<Radio />}
+                            label="Mujer"
+                        />
+                        <FormControlLabel
+                            onChange={(e) => setCandSex(e.target.value)}
+                            value="M"
+                            control={<Radio />}
+                            label="Hombre"
+                        />
+                    </RadioGroup>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose}>Cancel</Button>
+                    <Button
+                        disabled={!(candi_name && candi_ape && candi_sexo)}
+                        onClick={handleSubmit}
+                    >
+                        Crear
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </div>
     );
 };

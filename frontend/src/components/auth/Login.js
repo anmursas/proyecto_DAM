@@ -17,6 +17,8 @@ const Login = () => {
     const [message, setMessage] = useState("");
     const [showPassword, setshowPassword] = useState(false);
 
+    
+
     // Funcion que envia usuario y contraseña a la API
     function handleLogin(e) {
         e.preventDefault();
@@ -74,7 +76,7 @@ const Login = () => {
                         margin="normal"
                         required
                         fullWidth
-                        label="username"
+                        label="Nombre de usuario"
                         type="username"
                         autoFocus
                         value={username}
@@ -88,11 +90,10 @@ const Login = () => {
                     />
 
                     <TextField
-                        id="test-id"
                         margin="normal"
                         required
                         fullWidth
-                        label="password"
+                        label="Contraseña"
                         type={showPassword ? 'text' : 'password'}
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}

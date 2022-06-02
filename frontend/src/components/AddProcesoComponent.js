@@ -1,34 +1,24 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from "react-router-dom";
-import ProcesoService from '../services/ProcesoService';
-import ValuesService from '../services/ValuesService';
-import { FormControl, InputLabel, Select, MenuItem, Button, Container, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Autocomplete, Stack, Grid, Card, CardContent, Dialog, DialogContent, DialogContentText, DialogActions, DialogTitle, Alert } from '@mui/material';
+import { FormControl, InputLabel, Select, MenuItem, TextField, Button, Paper, Container, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Autocomplete, Stack, Grid, Card, CardContent, Dialog, DialogContent, DialogContentText, DialogActions, DialogTitle, Alert } from '@mui/material';
 import { ResponsivePie } from '@nivo/pie'
-import TextField from '@mui/material/TextField';
-import Paper from '@mui/material/Paper';
+
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import ProcesoService from '../services/ProcesoService';
+import ValuesService from '../services/ValuesService';
 import AuthService from '../services/auth.service';
 
 
 const AddProcesoComponent = () => {
 
     let navigate = useNavigate()
-    
+
     // Dialogo 
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState("");
 
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
-
-    const handleClose = () => {
-        setOpen(false);
-    };
-
-    // Esto son los desplegables que se muestran, guardamos todos los objetos
-    // pero solo mostramos el nombre
+    // Valor de la base de datos
     const [dptos, setDptos] = useState([])
     const [cts, setCts] = useState([])
     const [reclus, setReclus] = useState([])
@@ -42,21 +32,19 @@ const AddProcesoComponent = () => {
     // Variable rellenada con 
     var optiones = []
 
-    // Guardamos el id de cada campo para el insert o el update
+    // Valores para el nuevo proceso
     const [dpto_id, setDpto_id] = useState('')
     const [ct_id, setCt_id] = useState('')
     const [reclu_id, setReclu_id] = useState('')
     const [fechaInicio, setFechaInicio] = useState('')
     const [fechaFin, setFechaFin] = useState('')
+    const [titu_id, setTitu_id] = useState([])
     const [vinc_id, setVinc_id] = useState('')
-    const [puesto_id, setPuesto_id] = useState('')
-    const [puestoT, setPuestoT] = useState('')
     const [tc_id, setTc_id] = useState('')
+    const [puesto_id, setPuesto_id] = useState('')
+    const [puestoT, setPuestoT] = useState('') // Donde se almacena los valores del puesto de trabajo
     const [jl_id, setJl_id] = useState('')
     const [requisitos, setRequisitos] = useState('')
-
-    // Los arrays de IDs de titulaciones y candidatos
-    const [titu_id, setTitu_id] = useState([])
     const [candi_id, setCandi_id] = useState([])
 
     const data = [
@@ -78,77 +66,83 @@ const AddProcesoComponent = () => {
 
 
 
-
+    // Hace diferentes consultas a la BDD para recojer los valores de los desplegables
     function getValues() {
         ValuesService.getAllDpto().then((response) => {
             setDptos(response.data)
         }).catch(error => {
             console.log(error)
+            setOpen(true)
         })
 
         ValuesService.getAllCt().then((response) => {
             setCts(response.data)
         }).catch(error => {
             console.log(error)
+            setOpen(true)
         })
 
         ValuesService.getAllReclu().then((response) => {
             setReclus(response.data)
         }).catch(error => {
             console.log(error)
+            setOpen(true)
         })
 
         ValuesService.getAllVincus().then((response) => {
             setVincus(response.data)
         }).catch(error => {
             console.log(error)
+            setOpen(true)
         })
 
         ValuesService.getAllPuestos().then((response) => {
             setPuestos(response.data)
+            console.log(response.data)
         }).catch(error => {
             console.log(error)
+            setOpen(true)
         })
 
         ValuesService.getAllTc().then((response) => {
             setTcs(response.data)
         }).catch(error => {
             console.log(error)
+            setOpen(true)
         })
 
         ValuesService.getAllCt().then((response) => {
             setCts(response.data)
         }).catch(error => {
             console.log(error)
+            setOpen(true)
         })
 
         ValuesService.getAllJl().then((response) => {
             setJls(response.data)
         }).catch(error => {
             console.log(error)
+            setOpen(true)
         })
 
         ValuesService.getAllTa().then((response) => {
             setTitulaciones(response.data)
         }).catch(error => {
             console.log(error)
+            setOpen(true)
         })
     }
 
     // Función para guardas o actualizar el proceso al dar al botón
-    function saveOrUpdateProceso(e) {
-
+    function saveProceso(e) {
         e.preventDefault();
-
         if (!(dpto_id && ct_id && reclu_id && fechaInicio && fechaFin && vinc_id && puesto_id && jl_id && validForm() && (candi_id.length > 0) && (titu_id.length > 0))) {
-            console.log("todont perfe")
-            handleClickOpen()
+            setOpen(true)
         } else if (dpto_id && ct_id && reclu_id && fechaInicio && fechaFin && vinc_id && puesto_id && jl_id && validForm() && (candi_id.length > 0) && (titu_id.length > 0)) {
             var titulacionesArr = [];
             titu_id.forEach(function (v) {
                 titulacionesArr.push({ id: v });
             });
-
             var candidatosArr = [];
             for (let index = 0; index < candi_id.length; index++) {
                 candidatosArr.push(
@@ -158,11 +152,8 @@ const AddProcesoComponent = () => {
                         },
                     }
                 );
-
             }
-
-
-
+            // Si es laboral le añadimos la contratación
             if (vinc_id === 1) {
                 const procesoLaboral = {
                     "elDepartamento": {
@@ -193,14 +184,17 @@ const AddProcesoComponent = () => {
                     "procesoCandidatos": candidatosArr,
                     "requisitos": requisitos
                 };
-
-
+                // Guardamos el proceso
                 ProcesoService.createProceso(procesoLaboral).then((response) => {
                     window.location.reload(true);
 
-                }).catch(error => { console.log(error); });
+                }).catch(error => {
+                    console.log(error);
+                    setOpen(true)
+                });
 
             } else {
+                // Si es estudiante la contratación se queda en nulo
                 const procesoEstudiante = {
                     "elDepartamento": {
                         "id": dpto_id
@@ -229,7 +223,10 @@ const AddProcesoComponent = () => {
 
                 ProcesoService.createProceso(procesoEstudiante).then((response) => {
                     window.location.reload(true);
-                }).catch(error => { console.log(error); });
+                }).catch(error => {
+                    console.log(error);
+                    setOpen(true)
+                });
             }
         }
 
@@ -238,6 +235,8 @@ const AddProcesoComponent = () => {
 
     }
 
+    // Al seleccionar un candidato del desplegable comprobamos que 
+    // no está en el array de candidatos
     function handleInputChange2(event, value) {
         if (value) {
             if (candi_id.includes(value.id)) {
@@ -249,29 +248,19 @@ const AddProcesoComponent = () => {
         }
     }
 
-
-
-
-
-    function dateFunction() {
-        if (fechaInicio < fechaFin) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
+    // Comprobamos que si es laboral tiene contratación
     function validForm() {
         if (vinc_id === 1 && !tc_id) {
             return false;
         } else if (vinc_id === 1 && tc_id > 0) {
-            return dateFunction();
+            return (fechaInicio < fechaFin);
         } else if (vinc_id === 2) {
-            return dateFunction();
+            return (fechaInicio < fechaFin);
         }
 
     }
 
+    // Borramos un candidato del array
     function deleteCandidato(id_) {
         const temp = [...candi_id];
         const index = candi_id.indexOf(id_);
@@ -283,29 +272,7 @@ const AddProcesoComponent = () => {
         setCandi_id(temp);
     }
 
-    function tipoc_() {
-
-
-        if (vinc_id === 1) {
-            return <FormControl fullWidth margin='normal'>
-                <InputLabel required error={!tc_id} id="demo-simple-select-label">Tipo de contratación: </InputLabel>
-                <Select required error={!tc_id} style={{ backgroundColor: 'white' }} onChange={(e) => setTc_id(e.target.value)} labelId="demo-simple-select-label" id="demo-simple-select" label="Centro de trabajo" value={tc_id}>
-                    {tcs.map(
-                        tc => <MenuItem divider key={tc.id} value={tc.id}> {tc.nombre}</MenuItem>
-                    )}
-                </Select>
-            </FormControl>;
-
-
-        } else {
-            return;
-        }
-    }
-
-    function goTo(e) {
-        window.location.reload(true);
-    }
-
+    // Vacía todos los campos
     function resetButton() {
         setDpto_id('');
         setCt_id('');
@@ -321,20 +288,28 @@ const AddProcesoComponent = () => {
         setTitu_id([]);
     }
 
-    function per_mujer() {
-        if (percentil > 50) {
-            return <h1 style={{ fontSize: "600%", color: "#86dc3d" }}>{percentil}%</h1>
+    //FUNCIONES QUE DEVUELVEN COMPONENTES
 
+    // Si es laboral añadimos el campo contratación
+    function tipoc_() {
+
+        if (vinc_id === 1) {
+            return <FormControl fullWidth margin='normal'>
+                <InputLabel required error={!tc_id} id="demo-simple-select-label">Tipo de contratación: </InputLabel>
+                <Select required error={!tc_id} style={{ backgroundColor: 'white' }} onChange={(e) => setTc_id(e.target.value)} labelId="demo-simple-select-label" id="demo-simple-select" label="Centro de trabajo" value={tc_id}>
+                    {tcs.map(
+                        tc => <MenuItem divider key={tc.id} value={tc.id}> {tc.nombre}</MenuItem>
+                    )}
+                </Select>
+            </FormControl>;
         } else {
-            return <h1 style={{ fontSize: "600%", color: "#f20000" }}>{percentil}%</h1>
-
+            return;
         }
     }
-
+    
     function personas_() {
         if (puesto_id) {
             return <div>
-                {/* <h3>Mujeres: {puestoT.mujeres}, Hombres: {puestoT.hombres}</h3> */}
                 <Grid container spacing={2}>
 
                     <Grid item xs>
@@ -349,13 +324,7 @@ const AddProcesoComponent = () => {
                                     activeOuterRadiusOffset={8}
                                     borderWidth={1}
                                     borderColor={{
-                                        from: 'color',
-                                        modifiers: [
-                                            [
-                                                'darker',
-                                                0.2
-                                            ]
-                                        ]
+                                        from: 'color', modifiers: [['darker', 0.2]]
                                     }}
                                     colors={{ datum: 'data.color' }}
                                     arcLinkLabelsSkipAngle={10}
@@ -364,54 +333,37 @@ const AddProcesoComponent = () => {
                                     arcLinkLabelsThickness={2}
                                     arcLinkLabelsColor={{ from: 'color' }}
                                     arcLabelsSkipAngle={10}
-                                    arcLabelsTextColor={{
-                                        from: 'color',
-                                        modifiers: [
-                                            [
-                                                'darker',
-                                                2
-                                            ]
-                                        ]
-                                    }}
-                                    fill={[
-                                        {
-                                            match: {
-                                                id: 'hombres'
-                                            },
+                                    arcLabelsTextColor={{ from: 'color', modifiers: [['darker', 2]] }}
+                                    fill={
+                                        [{
+                                            match: { id: 'hombres' },
                                             id: 'hombres'
                                         },
                                         {
-                                            match: {
-                                                id: 'mujeres'
-                                            },
+                                            match: { id: 'mujeres' },
                                             id: 'mujeres'
-                                        }
-                                    ]}
-                                    legends={[
-                                        {
-                                            anchor: 'bottom',
-                                            direction: 'row',
-                                            justify: false,
-                                            translateX: 0,
-                                            translateY: 56,
-                                            itemsSpacing: 0,
-                                            itemWidth: 100,
-                                            itemHeight: 18,
-                                            itemTextColor: '#999',
-                                            itemDirection: 'left-to-right',
-                                            itemOpacity: 1,
-                                            symbolSize: 18,
-                                            symbolShape: 'circle',
-                                            effects: [
-                                                {
-                                                    on: 'hover',
-                                                    style: {
-                                                        itemTextColor: '#000'
-                                                    }
-                                                }
-                                            ]
-                                        }
-                                    ]}
+                                        }]
+                                    }
+                                    legends={[{
+                                        anchor: 'bottom',
+                                        direction: 'row',
+                                        justify: false,
+                                        translateX: 0,
+                                        translateY: 56,
+                                        itemsSpacing: 0,
+                                        itemWidth: 100,
+                                        itemHeight: 18,
+                                        itemTextColor: '#999',
+                                        itemDirection: 'left-to-right',
+                                        itemOpacity: 1,
+                                        symbolSize: 18,
+                                        symbolShape: 'circle',
+                                        effects: [{
+                                            on: 'hover', style: {
+                                                itemTextColor: '#000'
+                                            }
+                                        }]
+                                    }]}
                                 />
                             </CardContent>
                         </Card>
@@ -420,12 +372,7 @@ const AddProcesoComponent = () => {
                     <Grid item xs>
                         <Card >
                             <CardContent style={{ height: 300 }}>
-
-                                {
-                                    per_mujer()
-                                }
-
-
+                                <h1 style={{ fontSize: "600%", color: (percentil > 50) ? "#86dc3d" : "#f20000" }}>{percentil}%</h1>
                             </CardContent>
                         </Card>
                     </Grid>
@@ -507,6 +454,7 @@ const AddProcesoComponent = () => {
             setCandidatos(response.data)
         }).catch(error => {
             console.log(error)
+            setOpen(true)
         })
     }, [candi_id])
 
@@ -516,6 +464,7 @@ const AddProcesoComponent = () => {
             setPuestoT(response.data)
         }).catch(error => {
             console.log(error)
+            setOpen(true)
         })
 
     }, [puesto_id])
@@ -619,7 +568,7 @@ const AddProcesoComponent = () => {
                                     }
 
                                     <FormControl fullWidth margin='normal' style={{ backgroundColor: 'white' }}>
-                                        <InputLabel required error={!puesto_id} id="demo-simple-select-label">Puesto: </InputLabel>
+                                        <InputLabel required error={!puesto_id} id="demo-simple-select-label">Puesto de trabajo: </InputLabel>
                                         <Select required error={!puesto_id} onChange={(e) => { setPuesto_id(e.target.value) }} labelId="demo-simple-select-label" id="demo-simple-select" label="Centro de trabajo" value={puesto_id}>
                                             {puestos.map(
                                                 puesto => <MenuItem divider key={puesto.id} value={puesto.id} > {puesto.nombre}</MenuItem>
@@ -642,7 +591,6 @@ const AddProcesoComponent = () => {
                                     </FormControl>
                                     <FormControl fullWidth margin='normal' style={{ backgroundColor: 'white' }}>
                                         <TextField id="outlined-basic" label="Requisitos" variant="outlined" onChange={(e) => setRequisitos(e.target.value)} />
-
                                     </FormControl>
 
                                 </div>
@@ -653,14 +601,12 @@ const AddProcesoComponent = () => {
 
                                 <FormControl required error={candi_id.length < 1} fullWidth margin='normal' style={{ backgroundColor: 'white' }}>
                                     <Autocomplete
-
                                         disablePortal
                                         id="combo-box-demo"
                                         options={optiones}
                                         onChange={handleInputChange2}
-
-
-                                        renderInput={(params) => <TextField {...params} error={candi_id.length < 1} label="Candidatos:" />} />
+                                        renderInput={(params) => <TextField required {...params} error={candi_id.length < 1} label="Candidatos:" />}
+                                    />
                                 </FormControl>
 
                                 {
@@ -669,7 +615,7 @@ const AddProcesoComponent = () => {
 
                                 <Button
                                     href='#'
-                                    onClick={(e) => saveOrUpdateProceso(e)}
+                                    onClick={(e) => saveProceso(e)}
                                     variant='contained'
                                     color='success'
                                     style={{ marginTop: "10px" }}
@@ -678,7 +624,7 @@ const AddProcesoComponent = () => {
                                     SAVE
                                 </Button>
                                 <Button variant='contained' style={{ marginTop: "10px", marginLeft: "10px" }} onClick={resetButton}> RESET</Button>
-                                <Button onClick={(e) => goTo()} variant='contained' color='error' style={{ marginLeft: "10px", marginTop: "10px" }}> CANCEL</Button>
+                                <Button onClick={(e) => window.location.reload(true)} variant='contained' color='error' style={{ marginLeft: "10px", marginTop: "10px" }}> CANCEL</Button>
                             </form>
                         </Paper>
                     </Container>
@@ -688,17 +634,17 @@ const AddProcesoComponent = () => {
 
             <Dialog
                 open={open}
-                onClose={handleClose}
+                onClose={(e) => setOpen(false)}
             >
                 <DialogTitle>ERROR</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        Ha habido un error en la autenticación de datos
+                        Ha habido un error
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose}>CANCELAR</Button>
-                    <Button onClick={handleClose}>ACEPTAR</Button>
+                    <Button onClick={(e) => setOpen(false)}>CANCELAR</Button>
+                    <Button onClick={(e) => setOpen(false)}>ACEPTAR</Button>
                 </DialogActions>
             </Dialog>
         </React.Fragment>

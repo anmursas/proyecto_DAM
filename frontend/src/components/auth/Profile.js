@@ -12,16 +12,19 @@ const Profile = () => {
     const [id, setId] = useState("");
     const [roles, setRoles] = useState([]);
 
+    const [user, setUser] = useState("")
 
     useEffect(() => {
         const user = AuthService.getCurrentUser();
         if (!user) {
             navigate("/login");
         } else {
+            setUser(user);
             setUsername(user.username);
             setMail(user.email);
             setId(user.id);
             setRoles(user.roles);
+            console.log(user)
         }
     }, []);
 
@@ -37,6 +40,9 @@ const Profile = () => {
             </p>
             <p>
                 <strong>Email:</strong> {email}
+            </p>
+            <p>
+                <strong>Token:</strong> {user.accessToken}
             </p>
             <strong>Rol:</strong>
             <ul>

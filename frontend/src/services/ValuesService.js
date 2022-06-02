@@ -84,6 +84,10 @@ class ValuesService {
         return axios.get(API_URL + "/v1/reclutador/get-id", { headers: authHeader() })
     }
 
+    deleteCandidato(id) {
+        return axios.delete(API_URL + '/v1/candidatos/' + id, { headers: authHeader() })
+    }
+
 
 
 }

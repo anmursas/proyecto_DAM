@@ -8,10 +8,13 @@ import procesos.springboot.exception.ResourceNotFoundException;
 import procesos.springboot.model.Candidatos;
 import procesos.springboot.model.Proceso;
 import procesos.springboot.repository.CandidatosRepository;
+import procesos.springboot.repository.ProcesoCandidatosReposotory;
+import procesos.springboot.model.ProcesoCandidatos;
 import procesos.springboot.repository.ProcesoRepository;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/v1/candidatos")
@@ -23,6 +26,9 @@ public class CandidatosController {
 
     @Autowired
     private ProcesoRepository procesoRepository;
+
+    @Autowired
+    private ProcesoCandidatosReposotory procesoCandidatosReposotory;
 
     @GetMapping
     public List<Candidatos> getAllCandidatos() {
@@ -47,6 +53,16 @@ public class CandidatosController {
 
     @DeleteMapping("{id}")
     public ResponseEntity<Proceso> deleteCandidato(@PathVariable Long id) {
+
+        List<ProcesoCandidatos> pcs = procesoCandidatosReposotory.findAll();
+
+        for (ProcesoCandidatos pc : pcs) {
+            if (Objects.equals(pc.getCandidatos().getId(), id)) {
+                System.out.println(id);
+                procesoCandidatosReposotory.deleteById(pc.getId());
+            }
+
+        }
 
         candidatosRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException("No existe candidato con este ID: " + id));

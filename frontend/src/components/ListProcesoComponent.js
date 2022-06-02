@@ -297,7 +297,7 @@ export default function ListProcesoComponent() {
 
   return (
     <Box sx={{ border: 0, padding: '5px 15px 5px 15px' }}>
-      <Box sx={{ mb: 2, mt: 2, display: "flex", justifyContent: "center" }}>
+      {/* PROVISIONAL <Box sx={{ mb: 2, mt: 2, display: "flex", justifyContent: "center" }}>
         <LocalizationProvider dateAdapter={AdapterDateFns} dateFormat>
           <Stack spacing={2} direction="row">
             <DatePicker
@@ -322,10 +322,10 @@ export default function ListProcesoComponent() {
           </Stack>
         </LocalizationProvider>
 
-      </Box>
+      </Box> */}
 
 
-      <Paper sx={{ width: '100%', mb: 2 }}>
+      <Paper sx={{ width: '100%', mb: 2 }} elevation={2}>
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}

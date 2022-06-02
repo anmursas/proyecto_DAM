@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { IconButton, InputAdornment, Typography, Box, Container, Alert, Avatar, Button, CssBaseline, TextField, Link, Grid } from "@mui/material";
+import { IconButton, InputAdornment, Typography, Box, Container, Alert, Avatar, Button, TextField, Link, Grid } from "@mui/material";
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useNavigate } from 'react-router-dom';
@@ -51,7 +51,7 @@ const SignUp = () => {
 
     }
   }
-  
+
   return (
     <Container component="main" maxWidth="xs">
       <Box
@@ -66,7 +66,7 @@ const SignUp = () => {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign up
+          Regístrate
         </Typography>
         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
           <Grid container spacing={2}>
@@ -176,11 +176,11 @@ const SignUp = () => {
             sx={{ mt: 2, mb: 2 }}
             disabled={!(nombre && apellidos && email && password && (password === repeatedPassword))}
           >
-            Sign Up
+            Regístrate
           </Button>
 
           <Link onClick={(e) => navigate("/login")} variant="body2">
-            Already have an account? Sign in
+            Ya tienes una cuenta? Inicia sesión
           </Link>
 
         </Box>
@@ -191,4 +191,3 @@ const SignUp = () => {
 }
 
 export default SignUp;
-
