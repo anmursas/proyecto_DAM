@@ -339,8 +339,6 @@ export default function ListProcesoComponent() {
               onRequestSort={handleRequestSort}
             />
             <TableBody>
-              {/* if you don't need to support IE11, you can replace the `stableSort` call with:
-                 rows.slice().sort(getComparator(order, orderBy)) */}
               {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
