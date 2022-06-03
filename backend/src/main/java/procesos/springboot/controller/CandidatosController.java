@@ -70,5 +70,18 @@ public class CandidatosController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    @PutMapping("{id}")
+    public ResponseEntity<Candidatos> updateCandidato(@PathVariable Long id, @RequestBody Candidatos candidatosDetails) {
+        Candidatos updatedCandidato = candidatosRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No existe"));
+
+        updatedCandidato.setNombre(candidatosDetails.getNombre());
+        updatedCandidato.setApellido1(candidatosDetails.getApellido1());
+        updatedCandidato.setSexo(candidatosDetails.getSexo());
+
+        candidatosRepository.save(updatedCandidato);
+
+        return ResponseEntity.ok(updatedCandidato);
+    }
+
 
 }

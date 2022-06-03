@@ -88,6 +88,10 @@ class ValuesService {
         return axios.delete(API_URL + '/v1/candidatos/' + id, { headers: authHeader() })
     }
 
+    updateCandidato(id, candidato) {
+        return axios.put(API_URL + '/v1/candidatos/' + id + candidato, { headers: authHeader() })
+    }
+
 
 
 }

@@ -4,7 +4,6 @@ import { ResponsivePie } from '@nivo/pie';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AuthService from '../services/auth.service';
-import UserService from '../services/user.service';
 import ValuesService from '../services/ValuesService';
 
 
@@ -38,13 +37,29 @@ const AdminCandidatosComponent = () => {
         },
     ];
 
+    var percentil = Math.trunc((100 * mujeres) / (hombres + mujeres), 3)
+
     function deleteCandidato(id) {
         ValuesService.deleteCandidato(id).then((response) => {
             window.location.reload(true)
         }).catch(error => {
             console.log(error)
         })
-        console.log(id)
+    }
+
+    function editCandidato(id) {
+        setCandName(id.nombre)
+        setCandApe(id.apellido1)
+        setCandSex(id.sexo)
+
+        setOpen(true)
+    }
+
+    function newCandi() {
+        setCandName("")
+        setCandApe("")
+        setCandSex("")
+        setOpen(true)
     }
 
     function handleClose() {
@@ -65,28 +80,26 @@ const AdminCandidatosComponent = () => {
         setOpen(false);
     }
 
-    function per_mujer() {
-        if (percentil > 50) {
-            return <h1 style={{ fontSize: "600%", color: "#86dc3d" }}>{percentil}%</h1>
-
-        } else {
-            return <h1 style={{ fontSize: "600%", color: "#f20000" }}>{percentil}%</h1>
-
-        }
-    }
 
     useEffect(() => {
         const user = AuthService.getCurrentUser();
         if (user) {
-            ValuesService.getAllCandidatos().then((response) => {
-                setCandidatos(response.data)
+            ValuesService.isAdmin().then((response) => {
+                if (response.data === true) {
+                    ValuesService.getAllCandidatos().then((response2) => {
+                        setCandidatos(response2.data)
+                    })
+                } else {
+                    navigate("/login")
+                }
             })
         } else {
             navigate("/login")
         }
 
-    }, [navigate])
-    var percentil = Math.trunc((100 * mujeres) / (hombres + mujeres), 3)
+    }, [])
+
+
 
 
     useEffect(() => {
@@ -96,11 +109,9 @@ const AdminCandidatosComponent = () => {
 
             if (candidatos[index].sexo == "M") {
                 h++;
-                console.log("M")
             } else if (candidatos[index].sexo == "F") {
                 m++
             }
-
         }
         setHombres(h);
         setMujeres(m);
@@ -125,15 +136,7 @@ const AdminCandidatosComponent = () => {
                             cornerRadius={3}
                             activeOuterRadiusOffset={8}
                             borderWidth={1}
-                            borderColor={{
-                                from: 'color',
-                                modifiers: [
-                                    [
-                                        'darker',
-                                        0.2
-                                    ]
-                                ]
-                            }}
+                            borderColor={{ from: 'color', modifiers: [['darker', 0.2]] }}
                             colors={{ datum: 'data.color' }}
                             arcLinkLabelsSkipAngle={10}
                             arcLinkLabelsTextColor="#333333"
@@ -143,25 +146,13 @@ const AdminCandidatosComponent = () => {
                             arcLabelsSkipAngle={10}
                             arcLabelsTextColor={{
                                 from: 'color',
-                                modifiers: [
-                                    [
-                                        'darker',
-                                        2
-                                    ]
-                                ]
+                                modifiers: [['darker', 2]]
                             }}
                             fill={[
                                 {
-                                    match: {
-                                        id: 'hombres'
-                                    },
-                                    id: 'hombres'
-                                },
-                                {
-                                    match: {
-                                        id: 'mujeres'
-                                    },
-                                    id: 'mujeres'
+                                    match: { id: 'hombres' }, id: 'hombres'
+                                }, {
+                                    match: { id: 'mujeres' }, id: 'mujeres'
                                 }
                             ]}
                             legends={[
@@ -179,14 +170,7 @@ const AdminCandidatosComponent = () => {
                                     itemOpacity: 1,
                                     symbolSize: 18,
                                     symbolShape: 'circle',
-                                    effects: [
-                                        {
-                                            on: 'hover',
-                                            style: {
-                                                itemTextColor: '#000'
-                                            }
-                                        }
-                                    ]
+                                    effects: [{ on: 'hover', style: { itemTextColor: '#000' } }]
                                 }
                             ]}
                         />
@@ -197,10 +181,9 @@ const AdminCandidatosComponent = () => {
             <Grid item xs>
                 <Card >
                     <CardContent style={{ height: 300 }}>
+                        <h3>GLOBAL  </h3>
+                        <h1 style={{ fontSize: "600%", color: (percentil > 50) ? "#86dc3d" : "#f20000" }}> {percentil}%</h1>
 
-                        {
-                            per_mujer()
-                        }
 
 
                     </CardContent>
@@ -223,7 +206,7 @@ const AdminCandidatosComponent = () => {
                 >
                     Candidatos
                 </Typography>
-                <Button onClick={(e) => setOpen(true)} sx={{ mr: 8 }}>
+                <Button onClick={(e) => newCandi()} sx={{ mr: 8 }}>
                     <svg data-v-1f90038a="" viewBox="0 0 16 16" width="1em" height="1em" focusable="false" role="img" alt="icon" id="nueva-imputacion" xmlns="http://www.w3.org/2000/svg" fill="rgb(31, 17, 97)" style={{ height: 32, width: 32 }}>
                         <g>
                             <path fillRule="evenodd" d="M8 3.5a.5.5 0 01.5.5v4a.5.5 0 01-.5.5H4a.5.5 0 010-1h3.5V4a.5.5 0 01.5-.5z" clipRule="evenodd"></path>
@@ -243,6 +226,7 @@ const AdminCandidatosComponent = () => {
                                     <TableCell style={{ fontWeight: 'bold' }}>NOMBRE</TableCell>
                                     <TableCell style={{ fontWeight: 'bold' }}>APELLIDO</TableCell>
                                     <TableCell style={{ fontWeight: 'bold' }}>SEXO</TableCell>
+                                    <TableCell style={{ fontWeight: 'bold' }}>PROCESOS</TableCell>
                                     <TableCell style={{ fontWeight: 'bold' }}>ACCIONES</TableCell>
                                 </TableRow>
                             </TableHead>
@@ -253,10 +237,11 @@ const AdminCandidatosComponent = () => {
                                         <TableCell>{candidato.nombre}</TableCell>
                                         <TableCell>{candidato.apellido1}</TableCell>
                                         <TableCell>{candidato.sexo}</TableCell>
+                                        <TableCell>{candidato.procesoCandidatos?.length}</TableCell>
                                         <TableCell align='left'>
                                             <div>
                                                 <Stack direction="row">
-                                                    <Button >
+                                                    <Button onClick={(e) => editCandidato(candidato)} >
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="grey" viewBox="0 0 16 16">
                                                             <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
                                                             <path fillRule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
@@ -299,6 +284,7 @@ const AdminCandidatosComponent = () => {
                         type="text"
                         fullWidth
                         variant="standard"
+                        value={candi_name}
                         onChange={(e) => setCandName(e.target.value)}
                     />
                     <TextField
@@ -308,6 +294,7 @@ const AdminCandidatosComponent = () => {
                         type="text"
                         fullWidth
                         variant="standard"
+                        value={candi_ape}
                         onChange={(e) => setCandApe(e.target.value)}
                     />
                     <RadioGroup
@@ -318,12 +305,14 @@ const AdminCandidatosComponent = () => {
                         <FormControlLabel
                             onChange={(e) => setCandSex(e.target.value)}
                             value="F"
+                            checked={candi_sexo === "F"}
                             control={<Radio />}
                             label="Mujer"
                         />
                         <FormControlLabel
                             onChange={(e) => setCandSex(e.target.value)}
                             value="M"
+                            checked={candi_sexo === "M"}
                             control={<Radio />}
                             label="Hombre"
                         />

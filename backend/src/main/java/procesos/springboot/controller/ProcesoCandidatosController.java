@@ -78,7 +78,6 @@ public class ProcesoCandidatosController {
     @PutMapping("{id}")
     public ResponseEntity<ProcesoCandidatos> updateProcesoCandidatos(@PathVariable Long id, @RequestBody ProcesoCandidatos procesoCandidatosDetails) {
 
-
         ProcesoCandidatos updatedProcesoCandidatos = procesoCandidatosReposotory.findById(id).orElseThrow(() -> new ResourceNotFoundException("No existe"));
 
         updatedProcesoCandidatos.setEntrevistado(procesoCandidatosDetails.getEntrevistado());
@@ -87,10 +86,7 @@ public class ProcesoCandidatosController {
 
         procesoCandidatosReposotory.save(updatedProcesoCandidatos);
 
-
         return ResponseEntity.ok(updatedProcesoCandidatos);
-
-
     }
 
     @GetMapping("{id}")

@@ -937,9 +937,7 @@ const UpdateProcesoComponent = () => {
                     <Button onClick={handleClose}>ACEPTAR</Button>
                 </DialogActions>
             </Dialog>
-        </div>
-
-
+        </div> 
     )
 }
 

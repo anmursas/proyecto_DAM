@@ -45,7 +45,7 @@ public class ReclutadorController {
         boolean admin = false;
         String jwtToken = request.getHeader("Authorization");
         if (jwtToken == null) {
-            admin = false;
+              admin = false;
         } else {
             String[] token = jwtToken.split(" ");
             Reclutador r = reclutadorRepository.findByUsername((jwtUtils.getUserNameFromJwtToken(token[1]))).get();
