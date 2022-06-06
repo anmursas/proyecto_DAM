@@ -27,13 +27,12 @@ public class ReclutadorController {
     private JwtUtils jwtUtils;
 
     @GetMapping
-    // @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public List<Reclutador> getAllReclutadores() {
         return reclutadorRepository.findAll();
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Reclutador> getProcesoById(@PathVariable Long id) {
+    public ResponseEntity<Reclutador> getUserById(@PathVariable Long id) {
         Reclutador reclutador = reclutadorRepository.findById(id).orElseThrow(()
                 -> new ResourceNotFoundException("reclutador not exists with id: " + id));
         return ResponseEntity.ok(reclutador);
@@ -45,7 +44,7 @@ public class ReclutadorController {
         boolean admin = false;
         String jwtToken = request.getHeader("Authorization");
         if (jwtToken == null) {
-              admin = false;
+            admin = false;
         } else {
             String[] token = jwtToken.split(" ");
             Reclutador r = reclutadorRepository.findByUsername((jwtUtils.getUserNameFromJwtToken(token[1]))).get();

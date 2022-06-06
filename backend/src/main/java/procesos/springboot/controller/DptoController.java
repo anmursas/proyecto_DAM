@@ -20,7 +20,6 @@ public class DptoController {
     private DptoRepository dptoRepository;
 
     @GetMapping
-    // @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public List<Dpto> getAllDpto() {
         return dptoRepository.findAll();
     }
@@ -28,10 +27,11 @@ public class DptoController {
 
 
     @GetMapping("{id}")
-    public ResponseEntity<Dpto> getCandidatosById(@PathVariable Long id) {
+    public ResponseEntity<Dpto> getDptoById(@PathVariable Long id) {
         Dpto dpto = dptoRepository.findById(id).orElseThrow(()
                 -> new ResourceNotFoundException("dpto not exists with id: " + id));
         return ResponseEntity.ok(dpto);
     }
 
 }
+

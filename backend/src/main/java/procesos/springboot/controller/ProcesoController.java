@@ -15,9 +15,6 @@ import procesos.springboot.security.jwt.JwtUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.sql.Date;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -64,12 +61,11 @@ public class ProcesoController {
     private ProcesoCandidatosReposotory procesoCandidatosReposotory;
 
     @GetMapping
-    public List<Proceso> getAllProceso(@NotNull HttpServletRequest request) throws IOException {
+    public List<Proceso> getAllProceso(@NotNull HttpServletRequest request) {
         String user = request.getRemoteUser();
         if (!(user == null)) {
             Reclutador r = reclutadorRepository.findByUsername(user).get();
             Set<Role> s = r.getRoles();
-
             for (Role ro : s) {
                 if (ro.getName().toString() == "ROLE_ADMIN") {
                     return procesoRepository.findAll();
@@ -78,13 +74,10 @@ public class ProcesoController {
                 }
             }
         } else {
-
         }
-
         return null;
     }
 
-    // build get employee by id REST API
     @GetMapping("{id}")
     public ResponseEntity<Proceso> getProcesoById(@PathVariable Long id, HttpServletRequest request) {
         String user = request.getRemoteUser();
@@ -147,7 +140,6 @@ public class ProcesoController {
         String fecha2 = splitted[7];
         System.out.println("Fecha 1 = " + fecha1);
         System.out.println("Fecha 2 = " + fecha2);
-
 
 
         return null;

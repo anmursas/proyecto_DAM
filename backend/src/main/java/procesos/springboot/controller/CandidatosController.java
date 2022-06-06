@@ -18,7 +18,7 @@ import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/v1/candidatos")
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin(origins = "localhost:3000", maxAge = 3600)
 public class CandidatosController {
 
     @Autowired
@@ -35,13 +35,6 @@ public class CandidatosController {
         return candidatosRepository.findAll();
     }
 
-    @GetMapping("{id}")
-    public ResponseEntity<Candidatos> getCandidatosById(@PathVariable Long id) {
-        Candidatos candidatos = candidatosRepository.findById(id).orElseThrow(()
-                -> new ResourceNotFoundException("candidato not exists with id: " + id));
-        return ResponseEntity.ok(candidatos);
-    }
-
     @PostMapping
     public Candidatos createCandidato(@RequestBody Candidatos candidatos) {
         Candidatos c = new Candidatos();
@@ -49,6 +42,13 @@ public class CandidatosController {
         c.setApellido1(candidatos.getApellido1().toUpperCase(Locale.ROOT));
         c.setSexo(candidatos.getSexo().toUpperCase(Locale.ROOT));
         return candidatosRepository.save(c);
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<Candidatos> getCandidatosById(@PathVariable Long id) {
+        Candidatos candidatos = candidatosRepository.findById(id).orElseThrow(()
+                -> new ResourceNotFoundException("candidato not exists with id: " + id));
+        return ResponseEntity.ok(candidatos);
     }
 
     @DeleteMapping("{id}")

@@ -20,13 +20,12 @@ public class CentroTrabajoController {
     private CentroTrabajoRepository centroTrabajoRepository;
 
     @GetMapping
-    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public List<CentroTrabajo> getAllCentroTrabajo() {
         return centroTrabajoRepository.findAll();
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<CentroTrabajo> getCandidatosById(@PathVariable Long id) {
+    public ResponseEntity<CentroTrabajo> getCentrosById(@PathVariable Long id) {
         CentroTrabajo centroTrabajo = centroTrabajoRepository.findById(id).orElseThrow(()
                 -> new ResourceNotFoundException("CentroTrabajo not exists with id: " + id));
         return ResponseEntity.ok(centroTrabajo);

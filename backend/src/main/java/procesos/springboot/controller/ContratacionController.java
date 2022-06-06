@@ -21,13 +21,12 @@ public class ContratacionController {
     private ContratacionRepository contratacionRepository;
 
     @GetMapping
-    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public List<Contratacion> getAllContrataciones() {
         return contratacionRepository.findAll();
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Contratacion> getCandidatosById(@PathVariable Long id) {
+    public ResponseEntity<Contratacion> getContratacionById(@PathVariable Long id) {
         Contratacion contratacion = contratacionRepository.findById(id).orElseThrow(()
                 -> new ResourceNotFoundException("Contratacion not exists with id: " + id));
         return ResponseEntity.ok(contratacion);

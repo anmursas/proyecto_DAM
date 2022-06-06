@@ -22,13 +22,12 @@ public class JornadaLaboralController {
     private JornadaLaboralRepository jornadaLaboralRepository;
 
     @GetMapping
-    // @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public List<JornadaLaboral> getAllJornadas() {
         return jornadaLaboralRepository.findAll();
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<JornadaLaboral> getCandidatosById(@PathVariable Long id) {
+    public ResponseEntity<JornadaLaboral> getJornadaById(@PathVariable Long id) {
         JornadaLaboral jornadaLaboral = jornadaLaboralRepository.findById(id).orElseThrow(()
                 -> new ResourceNotFoundException("jornadaLaboral not exists with id: " + id));
         return ResponseEntity.ok(jornadaLaboral);

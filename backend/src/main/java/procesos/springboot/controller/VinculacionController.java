@@ -23,13 +23,12 @@ public class VinculacionController {
     private VinculacionRepository vinculacionRepository;
 
     @GetMapping
-    // @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public List<Vinculacion> getAllVinculacion() {
         return vinculacionRepository.findAll();
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Vinculacion> getProcesoById(@PathVariable Long id) {
+    public ResponseEntity<Vinculacion> getVinculacionById(@PathVariable Long id) {
         Vinculacion vinculacion = vinculacionRepository.findById(id).orElseThrow(()
                 -> new ResourceNotFoundException("vinculacion not exists with id: " + id));
         return ResponseEntity.ok(vinculacion);

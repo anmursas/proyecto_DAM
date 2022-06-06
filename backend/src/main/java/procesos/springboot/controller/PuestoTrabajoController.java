@@ -22,14 +22,13 @@ public class PuestoTrabajoController {
     private PuestoTrabajoRepository puestoTrabajoRepository;
 
     @GetMapping
-    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public List<PuestoTrabajo> getAllPuestos() {
         return puestoTrabajoRepository.findAll();
     }
 
 
     @GetMapping("{id}")
-    public ResponseEntity<PuestoTrabajo> getProcesoById(@PathVariable Long id) {
+    public ResponseEntity<PuestoTrabajo> getPuestoById(@PathVariable Long id) {
         PuestoTrabajo puestoTrabajo = puestoTrabajoRepository.findById(id).orElseThrow(()
                 -> new ResourceNotFoundException("puestoTrabajo not exists with id: " + id));
         return ResponseEntity.ok(puestoTrabajo);

@@ -23,13 +23,12 @@ public class TitulacionAcademicaController {
     private TitulacionAcademicaRepository titulacionAcademicaRepository;
 
     @GetMapping
-    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public List<TitulacionAcademica> getAllTitulaciones() {
         return titulacionAcademicaRepository.findAll();
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<TitulacionAcademica> getProcesoById(@PathVariable Long id) {
+    public ResponseEntity<TitulacionAcademica> getTitulacionById(@PathVariable Long id) {
         TitulacionAcademica titulacionAcademica = titulacionAcademicaRepository.findById(id).orElseThrow(()
                 -> new ResourceNotFoundException("titulacionAcademica not exists with id: " + id));
         return ResponseEntity.ok(titulacionAcademica);

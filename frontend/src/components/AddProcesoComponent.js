@@ -306,7 +306,7 @@ const AddProcesoComponent = () => {
             return;
         }
     }
-    
+
     function personas_() {
         if (puesto_id) {
             return <div>
@@ -621,7 +621,7 @@ const AddProcesoComponent = () => {
                                     style={{ marginTop: "10px" }}
                                     disabled={!enabled}
                                 >
-                                    SAVE
+                                    GUARDAR
                                 </Button>
                                 <Button variant='contained' style={{ marginTop: "10px", marginLeft: "10px" }} onClick={resetButton}> RESET</Button>
                                 <Button onClick={(e) => window.location.reload(true)} variant='contained' color='error' style={{ marginLeft: "10px", marginTop: "10px" }}> CANCEL</Button>
