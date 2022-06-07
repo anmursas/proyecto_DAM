@@ -67,5 +67,16 @@ public class ReclutadorController {
         return reclutadorRepository.findByUsername((jwtUtils.getUserNameFromJwtToken(token[1]))).get().getId();
     }
 
+    @GetMapping("/byid")
+    public Reclutador getRecluFromRequest(HttpServletRequest request) {
+        Reclutador r = new Reclutador();
+        String user = request.getRemoteUser();
+        if (!(user == null)) {
+            r = reclutadorRepository.findByUsername(user).get();
+        } else {
+        }
+        return r;
+    }
+
 }
 

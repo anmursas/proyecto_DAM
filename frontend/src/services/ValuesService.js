@@ -105,6 +105,10 @@ class ValuesService {
         return axios.post("http://localhost:8090/api/v1/proceso/date", dates)
     }
 
+    getUserByReqyest() {
+        return axios.get(API_URL + '/v1/reclutador/byid', { headers: authHeader() })
+    }
+
 }
 
 export default new ValuesService();

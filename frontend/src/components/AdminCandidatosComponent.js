@@ -204,7 +204,6 @@ const AdminCandidatosComponent = () => {
 
 
 
-
     useEffect(() => {
         var h = 0;
         var m = 0;
@@ -285,10 +284,7 @@ const AdminCandidatosComponent = () => {
                 <Card >
                     <CardContent style={{ height: 300 }}>
                         <h3>GLOBAL  </h3>
-                        <h1 style={{ fontSize: "200%", color: (percentil > 50) ? "#86dc3d" : "#E13838" }}> {percentil}%</h1>
-
-
-
+                        <h1 style={{ fontSize: "600%", color: (percentil > 50) ? "#86dc3d" : "#E13838" }}> {percentil}%</h1>
                     </CardContent>
                 </Card>
             </Grid>
@@ -407,7 +403,7 @@ const AdminCandidatosComponent = () => {
                 {
                     percentil_()
                 }
-                <h1>CANDIDATAS POR DEPARTAMENTO MUJERES // SELECCIONADAS POR DEPARTAMENTO</h1>
+                {/* <h1>CANDIDATAS POR DEPARTAMENTO MUJERES // SELECCIONADAS POR DEPARTAMENTO</h1> */}
                 {
                     m_byDpto()
                 }

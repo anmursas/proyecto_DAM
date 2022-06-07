@@ -98,25 +98,15 @@ const UpdateProcesoComponent = () => {
 
 
     // Comprobar si todos los parámetros están rellenadoso
-    var enabled = dpto_id && ct_id && reclu_id && fechaInicio && fechaFin && vinc_id && puesto_id && jl_id && validForm() && candi_id && titu_id;
-
-    // Comprueba si la fecha inicio es menor que la fecha fin
-    function dateFunction() {
-        if (fechaInicio < fechaFin) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-
+    var enabled = dpto_id && ct_id && reclu_id && fechaInicio && fechaFin && vinc_id && puesto_id && jl_id && validForm() && (candi_id.length > 0) && (titu_id.length > 0);
+    // Comprobamos que si es laboral tiene contratación
     function validForm() {
         if (vinc_id === 1 && !tc_id) {
             return false;
         } else if (vinc_id === 1 && tc_id > 0) {
-            return dateFunction();
+            return (fechaInicio < fechaFin);
         } else if (vinc_id === 2) {
-            return dateFunction();
+            return (fechaInicio < fechaFin);
         }
 
     }
@@ -869,7 +859,7 @@ const UpdateProcesoComponent = () => {
                                 </TableContainer>
                             </FormControl>
 
-                            <Button onClick={(e) => updateProceso(e)} variant='contained' color='success' style={{ marginTop: "10px" }} disabled={!enabled}>SAVE</Button>
+                            <Button onClick={(e) => updateProceso(e)} variant='contained' color='success' style={{ marginTop: "10px" }} disabled={!enabled}>ACTUALIZAR</Button>
                             <Button variant='contained' style={{ marginTop: "10px", marginLeft: "10px" }} onClick={resetButton}> RESET</Button>
                             <Button onClick={(e) => navigate("/")} variant='contained' color='error' style={{ marginLeft: "10px", marginTop: "10px" }}> CANCEL</Button>
                         </div>
@@ -937,7 +927,7 @@ const UpdateProcesoComponent = () => {
                     <Button onClick={handleClose}>ACEPTAR</Button>
                 </DialogActions>
             </Dialog>
-        </div> 
+        </div>
     )
 }
 

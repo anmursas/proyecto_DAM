@@ -18,7 +18,7 @@ import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/v1/candidatos")
-@CrossOrigin(origins = "localhost:3000", maxAge = 3600)
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class CandidatosController {
 
     @Autowired

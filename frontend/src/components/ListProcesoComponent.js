@@ -212,6 +212,7 @@ export default function ListProcesoComponent() {
 
     ValuesService.getProcesosFiltrados(fecha).then((response) => {
       console.log(response.data)
+      setRawRows(response.data);
     }).catch(error => {
       console.log(error)
     })
@@ -329,14 +330,14 @@ export default function ListProcesoComponent() {
 
             <DatePicker
               inputFormat="dd/MM/yyyy"
-              label="Fecha Inicio"
+              label="Fecha Fin"
               views={['year', 'month', 'day']}
               value={fecha2}
               onChange={(e) => setFecha2(e)}
               renderInput={(params) => <TextField  {...params} style={{ backgroundColor: 'white' }} />}
             />
 
-            <Button onClick={(e) => filtrarFechas()}> Buscar </Button>
+            <Button  onClick={(e) => filtrarFechas()}> Buscar </Button>
           </Stack>
         </LocalizationProvider>
 
@@ -380,8 +381,8 @@ export default function ListProcesoComponent() {
                       <TableCell align="left">{row.dpto}</TableCell>
                       <TableCell align="left">{row.centro}</TableCell>
                       <TableCell align="left">{row.reclu_nom}</TableCell>
-                      <TableCell align="left">{row.fechaI}</TableCell>
-                      <TableCell align="left">{row.fechaF}</TableCell>
+                      <TableCell align="left">{row.fechaI[8]}{row.fechaI[9]}-{row.fechaI[5]}{row.fechaI[6]}-{row.fechaI[0]}{row.fechaI[1]}{row.fechaI[2]}{row.fechaI[3]}</TableCell>
+                      <TableCell align="left">{row.fechaF[8]}{row.fechaF[9]}-{row.fechaF[5]}{row.fechaF[6]}-{row.fechaF[0]}{row.fechaF[1]}{row.fechaF[2]}{row.fechaF[3]}</TableCell>
                       <TableCell align="left">{row.vincu}</TableCell>
                       <TableCell align="left">{row.puesto}</TableCell>
                       <TableCell align="left">{row.jl}, {row.jl_hs}H/S</TableCell>

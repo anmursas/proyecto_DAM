@@ -1,6 +1,8 @@
+import { Paper } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthService from "../../services/auth.service";
+import ValuesService from "../../services/ValuesService";
 
 const Profile = () => {
 
@@ -19,36 +21,36 @@ const Profile = () => {
         if (!user) {
             navigate("/login");
         } else {
-            setUser(user);
-            setUsername(user.username);
-            setMail(user.email);
-            setId(user.id);
-            setRoles(user.roles);
-            console.log(user)
+            ValuesService.getUserByReqyest().then((response) => {
+                setUser(response.data)
+                console.log(response.data)
+            })
+
         }
     }, []);
 
     return (
-        <div>
+        <Paper sx={{ml: 70  }} style={{width:300}} >
             <header>
-                <h3>
-                    <strong>{username}</strong> Profile
-                </h3>
+                <h3>PERFIL DE USUARIO</h3>
             </header>
-            <p>
-                <strong>Id:</strong> {id}
+            <p >
+                <strong>Nombre de usuario:</strong> {user.username}
             </p>
-            <p>
-                <strong>Email:</strong> {email}
+            <p >
+                <strong>Id:</strong> {user.id}
             </p>
-            <p>
-                <strong>Token:</strong> {user.accessToken}
+            <p >
+                <strong>Email:</strong> {user.email}
+            </p>
+            <p >
+                <strong>Nombre y apellidos:</strong> {user.nombre}, {user.apellidos}
             </p>
             <strong>Rol:</strong>
             <ul>
-                {roles && roles.map((role, index) => <li key={index}>{role}</li>)}
+                {user.roles && user.roles.map((role, index) => <li key={index}>{role.name}</li>)}
             </ul>
-        </div>
+        </Paper>
     );
 };
 export default Profile;

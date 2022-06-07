@@ -15,10 +15,10 @@ import procesos.springboot.security.jwt.JwtUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/v1/proceso")
@@ -127,22 +127,41 @@ public class ProcesoController {
     }
 
     @PostMapping("/date")
-    public ResponseEntity<Proceso> findByDate(@RequestBody String dates) {
-        System.out.println(dates);
+    public List<Proceso> findByDate(@RequestBody String dates) throws ParseException {
+        List<Proceso> procesosFiltrados = new ArrayList<Proceso>();
+        if (dates.isEmpty()) {
 
-        String[] splitted = dates.split("\"");
+        } else {
+            System.out.println(dates);
 
-        for (int i = 0; i < splitted.length; i++) {
-            System.out.println(splitted[i]);
+            String[] splitted = dates.split("\"");
 
+            for (int i = 0; i < splitted.length; i++) {
+                System.out.println(splitted[i]);
+            }
+
+            String f1 = splitted[3];
+            String f2 = splitted[7];
+            String[] temp1 = f1.split("T");
+            String[] temp2 = f2.split("T");
+            String fecha1 = temp1[0];
+            String fecha2 = temp2[0];
+
+
+            Date date1 = Date.valueOf(fecha1);
+            Date date2 = Date.valueOf(fecha2);
+
+            for (Proceso p : procesoRepository.findAll()) {
+                if (!(p.getFechaInicio().before(date1) && p.getFechaFin().before(date1))) {
+                    if (!(p.getFechaInicio().after(date2) && p.getFechaFin().after(date2))) {
+                        procesosFiltrados.add(p);
+                    }
+                    ;
+                }
+            }
         }
-        String fecha1 = splitted[3];
-        String fecha2 = splitted[7];
-        System.out.println("Fecha 1 = " + fecha1);
-        System.out.println("Fecha 2 = " + fecha2);
 
-
-        return null;
+        return procesosFiltrados;
     }
 
 
@@ -218,6 +237,62 @@ public class ProcesoController {
     public List<Proceso> getAllProceso(@PathVariable Long id) {
 
         return procesoRepository.findByReclu(id);
+    }
+
+    @GetMapping("/dpto/{id}")
+    public Long getCandidatasByDpto(@PathVariable Long id) {
+        Long mujeres = 0L;
+        Long hombres = 0L;
+        Long porcentaje = 0L;
+
+        List<Proceso> procesos = procesoRepository.findAll();
+
+        for (Proceso p : procesos) {
+            if (p.getElDepartamento().getId().equals(id)) {
+                Set<ProcesoCandidatos> procesoCandidatos = p.getProcesoCandidatos();
+                for (ProcesoCandidatos pc : procesoCandidatos) {
+                    if (pc.getCandidatos().getSexo().toString().equals("F")) {
+                        mujeres++;
+                    }
+
+                    if (pc.getCandidatos().getSexo().toString().equals("M")) {
+                        hombres++;
+                    }
+                }
+            }
+        }
+        if (mujeres > 0) {
+            porcentaje = (mujeres * 100) / (hombres + mujeres);
+        }
+        return porcentaje;
+    }
+
+    @GetMapping("/dpto-s/{id}")
+    public Long getSeleccionadasByDpto(@PathVariable Long id) {
+        Long mujeres = 0L;
+        Long hombres = 0L;
+        Long porcentaje = 0L;
+
+        List<Proceso> procesos = procesoRepository.findAll();
+
+        for (Proceso p : procesos) {
+            if (p.getElDepartamento().getId().equals(id)) {
+                for (ProcesoCandidatos pc : p.getProcesoCandidatos()) {
+                    if (pc.getCandidatos().getSexo().toString().equals("F") && pc.getEntrevistado().toString().equals("SI")) {
+                        System.out.println(pc.getEntrevistado());
+                        mujeres++;
+                    }
+
+                    if (pc.getCandidatos().getSexo().toString().equals("M") && pc.getEntrevistado().toString().equals("SI")) {
+                        hombres++;
+                    }
+                }
+            }
+        }
+        if (mujeres > 0) {
+            porcentaje = (mujeres * 100) / (hombres + mujeres);
+        }
+        return porcentaje;
     }
 
 
