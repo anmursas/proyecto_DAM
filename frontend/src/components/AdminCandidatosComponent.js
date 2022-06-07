@@ -20,6 +20,19 @@ const AdminCandidatosComponent = () => {
 
     const [open, setOpen] = useState(false);
 
+    const [perc1, setPerc1] = useState(0);
+    const [perc2, setPerc2] = useState(0);
+    const [perc3, setPerc3] = useState(0);
+    const [perc4, setPerc4] = useState(0);
+    const [perc5, setPerc5] = useState(0);
+    const [perc6, setPerc6] = useState(0);
+
+    const [percs1, setPercs1] = useState(0);
+    const [percs2, setPercs2] = useState(0);
+    const [percs3, setPercs3] = useState(0);
+    const [percs4, setPercs4] = useState(0);
+    const [percs5, setPercs5] = useState(0);
+    const [percs6, setPercs6] = useState(0);
 
 
     const data = [
@@ -36,6 +49,59 @@ const AdminCandidatosComponent = () => {
             "color": "#1f1161"
         },
     ];
+
+    const dptos1 = [
+        {
+            name: "ARQUITECTURA",
+            perc: perc1
+        },
+        {
+            name: "CIVIL",
+            perc: perc2
+        },
+        {
+            name: "DESARROLLO DE NEGOCIO",
+            perc: perc3
+        },
+        {
+            name: "GESTIÓN OPERATIVA",
+            perc: perc4
+        },
+        {
+            name: "TRANSPORTES Y MOVILIDAD",
+            perc: perc5
+        },
+        {
+            name: "DGT",
+            perc: perc6
+        }
+    ]
+    const dptos2 = [
+        {
+            name: "ARQUITECTURA",
+            perc: percs1
+        },
+        {
+            name: "CIVIL",
+            perc: percs2
+        },
+        {
+            name: "DESARROLLO DE NEGOCIO",
+            perc: percs3
+        },
+        {
+            name: "GESTIÓN OPERATIVA",
+            perc: percs4
+        },
+        {
+            name: "TRANSPORTES Y MOVILIDAD",
+            perc: percs5
+        },
+        {
+            name: "DGT",
+            perc: percs6
+        }
+    ]
 
     var percentil = Math.trunc((100 * mujeres) / (hombres + mujeres), 3)
 
@@ -89,6 +155,43 @@ const AdminCandidatosComponent = () => {
                     ValuesService.getAllCandidatos().then((response2) => {
                         setCandidatos(response2.data)
                     })
+                    ValuesService.getCandidatosPorDepartamento(1).then((response) => {
+                        setPerc1(response.data)
+                    })
+                    ValuesService.getCandidatosPorDepartamento(2).then((response) => {
+                        setPerc2(response.data)
+                    })
+                    ValuesService.getCandidatosPorDepartamento(3).then((response) => {
+                        setPerc3(response.data)
+                    })
+                    ValuesService.getCandidatosPorDepartamento(4).then((response) => {
+                        setPerc4(response.data)
+                    })
+                    ValuesService.getCandidatosPorDepartamento(5).then((response) => {
+                        setPerc5(response.data)
+                    })
+                    ValuesService.getCandidatosPorDepartamento(6).then((response) => {
+                        setPerc6(response.data)
+                    })
+                    ValuesService.getSeleccionadosPorDepartamento(1).then((response) => {
+                        setPercs1(response.data)
+                    })
+                    ValuesService.getSeleccionadosPorDepartamento(2).then((response) => {
+                        setPercs2(response.data)
+                    })
+                    ValuesService.getSeleccionadosPorDepartamento(3).then((response) => {
+                        setPercs3(response.data)
+                    })
+                    ValuesService.getSeleccionadosPorDepartamento(4).then((response) => {
+                        setPercs4(response.data)
+                    })
+                    ValuesService.getSeleccionadosPorDepartamento(5).then((response) => {
+                        setPercs5(response.data)
+                    })
+                    ValuesService.getSeleccionadosPorDepartamento(6).then((response) => {
+                        setPercs6(response.data)
+                    })
+
                 } else {
                     navigate("/login")
                 }
@@ -130,7 +233,7 @@ const AdminCandidatosComponent = () => {
                     <CardContent style={{ height: 300 }}>
                         <ResponsivePie
                             data={data}
-                            margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
+                            margin={{ top: 20, right: 80, bottom: 80, left: 80 }}
                             innerRadius={0.5}
                             padAngle={0.7}
                             cornerRadius={3}
@@ -182,7 +285,7 @@ const AdminCandidatosComponent = () => {
                 <Card >
                     <CardContent style={{ height: 300 }}>
                         <h3>GLOBAL  </h3>
-                        <h1 style={{ fontSize: "600%", color: (percentil > 50) ? "#86dc3d" : "#f20000" }}> {percentil}%</h1>
+                        <h1 style={{ fontSize: "200%", color: (percentil > 50) ? "#86dc3d" : "#E13838" }}> {percentil}%</h1>
 
 
 
@@ -191,6 +294,40 @@ const AdminCandidatosComponent = () => {
             </Grid>
 
         </Grid >
+    }
+
+    function m_byDpto() {
+
+        return <Grid container spacing={2} sx={{ mt: 2 }} alignItems="left">
+            <Grid item xs={6}>
+                <Card>
+                    <CardContent sx={{ ml: 2 }} style={{ height: 200 }}>
+                        <Typography>CANDIDATAS POR DEPARTAMENTO MUJERES</Typography>
+                        {dptos1.map(
+                            dpto => <div style={{ display: 'flex', justifyContent: 'left', marginTop: 2 }}>
+                                <li>{dpto.name}: {dpto.perc}%
+                                </li>
+                            </div>
+                        )}
+                    </CardContent>
+                </Card>
+            </Grid>
+            <Grid item xs={6}>
+                <Card>
+                    <CardContent sx={{ ml: 2 }} style={{ height: 200 }}>
+                        <Typography>MUJERES SELECCIONADAS POR DEPARTAMENTO</Typography>
+                        {dptos2.map(
+                            dpto => <div style={{ display: 'flex', justifyContent: 'left', marginTop: 2 }}>
+                                <li>{dpto.name}: {dpto.perc}%</li>
+                            </div>
+                        )}
+                    </CardContent>
+                </Card>
+
+
+            </Grid>
+        </Grid >
+
     }
 
 
@@ -244,12 +381,12 @@ const AdminCandidatosComponent = () => {
                                                     <Button onClick={(e) => editCandidato(candidato)} >
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="grey" viewBox="0 0 16 16">
                                                             <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-                                                            <path fillRule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
+                                                            <path fillRule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1h4.5A1.5 1.5 0 0 0 1 2.5v11z" />
                                                         </svg>
                                                     </Button>
                                                     <Button onClick={(e) => deleteCandidato(candidato.id)}>
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="grey" viewBox="0 0 16 16" >
-                                                            <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z" />
+                                                            <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1h4.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z" />
 
                                                         </svg>
                                                     </Button>
@@ -270,6 +407,14 @@ const AdminCandidatosComponent = () => {
                 {
                     percentil_()
                 }
+                <h1>CANDIDATAS POR DEPARTAMENTO MUJERES // SELECCIONADAS POR DEPARTAMENTO</h1>
+                {
+                    m_byDpto()
+                }
+
+
+
+
             </Box>
 
             <Dialog open={open} onClose={handleClose}>
@@ -328,7 +473,7 @@ const AdminCandidatosComponent = () => {
                     </Button>
                 </DialogActions>
             </Dialog>
-        </div>
+        </div >
     );
 };
 

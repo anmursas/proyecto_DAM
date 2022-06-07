@@ -18,6 +18,8 @@ import { useNavigate } from "react-router-dom";
 import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import ValuesService from '../services/ValuesService';
+
 
 
 
@@ -56,8 +58,7 @@ function getComparator(order, orderBy) {
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-// This method is created for cross-browser compatibility, if you don't
-// need to support IE11, you can use Array.prototype.sort() directly
+
 function stableSort(array, comparator) {
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
@@ -200,6 +201,23 @@ export default function ListProcesoComponent() {
   }
 
 
+  function filtrarFechas() {
+    var fecha = {
+      "fecha1": fecha1,
+      "fecha2": fecha2
+    }
+
+
+    console.log(fecha)
+
+    ValuesService.getProcesosFiltrados(fecha).then((response) => {
+      console.log(response.data)
+    }).catch(error => {
+      console.log(error)
+    })
+  }
+
+
 
 
 
@@ -297,7 +315,7 @@ export default function ListProcesoComponent() {
 
   return (
     <Box sx={{ border: 0, padding: '5px 15px 5px 15px' }}>
-      {/* PROVISIONAL <Box sx={{ mb: 2, mt: 2, display: "flex", justifyContent: "center" }}>
+      <Box sx={{ mb: 2, mt: 2, display: "flex", justifyContent: "center" }}>
         <LocalizationProvider dateAdapter={AdapterDateFns} dateFormat>
           <Stack spacing={2} direction="row">
             <DatePicker
@@ -318,11 +336,11 @@ export default function ListProcesoComponent() {
               renderInput={(params) => <TextField  {...params} style={{ backgroundColor: 'white' }} />}
             />
 
-            <Button> Buscar </Button>
+            <Button onClick={(e) => filtrarFechas()}> Buscar </Button>
           </Stack>
         </LocalizationProvider>
 
-      </Box> */}
+      </Box>
 
 
       <Paper sx={{ width: '100%', mb: 2 }} elevation={2}>
@@ -367,10 +385,7 @@ export default function ListProcesoComponent() {
                       <TableCell align="left">{row.vincu}</TableCell>
                       <TableCell align="left">{row.puesto}</TableCell>
                       <TableCell align="left">{row.jl}, {row.jl_hs}H/S</TableCell>
-                      {/* <TableCell align="left">{row.req}</TableCell> */}
-                      <TableCell >
-
-                      </TableCell>
+                      
                       <TableCell>
                         <Stack spacing={-2} direction="row">
                           <Button onClick={() => handleEdit(row.id)}  >

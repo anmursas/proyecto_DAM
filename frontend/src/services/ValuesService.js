@@ -1,3 +1,4 @@
+import { CompressOutlined } from '@mui/icons-material';
 import axios from 'axios';
 import authHeader from './auth-header';
 
@@ -92,7 +93,17 @@ class ValuesService {
         return axios.put(API_URL + '/v1/candidatos/' + id + candidato, { headers: authHeader() })
     }
 
+    getCandidatosPorDepartamento(id) {
+        return axios.get(API_URL + '/v1/proceso/dpto/' + id, { headers: authHeader() })
+    }
 
+    getSeleccionadosPorDepartamento(id) {
+        return axios.get(API_URL + '/v1/proceso/dpto-s/' + id, { headers: authHeader() })
+    }
+
+    getProcesosFiltrados(dates) {
+        return axios.post("http://localhost:8090/api/v1/proceso/date", dates)
+    }
 
 }
 
