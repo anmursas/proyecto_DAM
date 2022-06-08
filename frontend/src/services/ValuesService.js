@@ -109,6 +109,13 @@ class ValuesService {
         return axios.get(API_URL + '/v1/reclutador/byid', { headers: authHeader() })
     }
 
+    getCandidatasBySeleccionador() {
+        return axios.get(API_URL + '/v1/reclutador/m', { headers: authHeader() })
+    }
+    getSeleccionadasBySeleccionador() {
+        return axios.get(API_URL + '/v1/reclutador/ms', { headers: authHeader() })
+    }
+
 }
 
 export default new ValuesService();

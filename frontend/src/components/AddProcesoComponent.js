@@ -8,7 +8,6 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import ProcesoService from '../services/ProcesoService';
 import ValuesService from '../services/ValuesService';
 import AuthService from '../services/auth.service';
-import moment from 'moment';
 
 
 const AddProcesoComponent = () => {
@@ -251,12 +250,10 @@ const AddProcesoComponent = () => {
 
     // Comprobamos que si es laboral tiene contratación
     function validForm() {
-        moment.locale('es')
-        var fechaInicio1 = moment.locale(fechaInicio).format('dd-mm-yyyy')
         if (vinc_id === 1 && !tc_id) {
             return false;
         } else if (vinc_id === 1 && tc_id > 0) {
-            return (fechaInicio1 < fechaFin);
+            return (fechaInicio < fechaFin);
         } else if (vinc_id === 2) {
             return (fechaInicio < fechaFin);
         }

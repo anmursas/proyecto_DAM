@@ -18,6 +18,9 @@ const AdminCandidatosComponent = () => {
     const [candi_ape, setCandApe] = useState("");
     const [candi_sexo, setCandSex] = useState("");
 
+    const [m_reclu, setM_reclu] = useState([]);
+    const [ms_reclu, setMS_reclu] = useState([]);
+
     const [open, setOpen] = useState(false);
 
     const [perc1, setPerc1] = useState(0);
@@ -25,14 +28,12 @@ const AdminCandidatosComponent = () => {
     const [perc3, setPerc3] = useState(0);
     const [perc4, setPerc4] = useState(0);
     const [perc5, setPerc5] = useState(0);
-    const [perc6, setPerc6] = useState(0);
 
     const [percs1, setPercs1] = useState(0);
     const [percs2, setPercs2] = useState(0);
     const [percs3, setPercs3] = useState(0);
     const [percs4, setPercs4] = useState(0);
     const [percs5, setPercs5] = useState(0);
-    const [percs6, setPercs6] = useState(0);
 
 
     const data = [
@@ -70,10 +71,6 @@ const AdminCandidatosComponent = () => {
         {
             name: "TRANSPORTES Y MOVILIDAD",
             perc: perc5
-        },
-        {
-            name: "DGT",
-            perc: perc6
         }
     ]
     const dptos2 = [
@@ -96,10 +93,6 @@ const AdminCandidatosComponent = () => {
         {
             name: "TRANSPORTES Y MOVILIDAD",
             perc: percs5
-        },
-        {
-            name: "DGT",
-            perc: percs6
         }
     ]
 
@@ -170,9 +163,6 @@ const AdminCandidatosComponent = () => {
                     ValuesService.getCandidatosPorDepartamento(5).then((response) => {
                         setPerc5(response.data)
                     })
-                    ValuesService.getCandidatosPorDepartamento(6).then((response) => {
-                        setPerc6(response.data)
-                    })
                     ValuesService.getSeleccionadosPorDepartamento(1).then((response) => {
                         setPercs1(response.data)
                     })
@@ -188,8 +178,15 @@ const AdminCandidatosComponent = () => {
                     ValuesService.getSeleccionadosPorDepartamento(5).then((response) => {
                         setPercs5(response.data)
                     })
-                    ValuesService.getSeleccionadosPorDepartamento(6).then((response) => {
-                        setPercs6(response.data)
+                    ValuesService.getCandidatasBySeleccionador().then((response) => {
+                        setM_reclu(response.data)
+                    }).catch(error => {
+                        console.log(error)
+                    })
+                    ValuesService.getSeleccionadasBySeleccionador().then((response) => {
+                        setMS_reclu(response.data)
+                    }).catch(error => {
+                        console.log(error)
                     })
 
                 } else {
@@ -291,14 +288,13 @@ const AdminCandidatosComponent = () => {
 
         </Grid >
     }
-
     function m_byDpto() {
 
         return <Grid container spacing={2} sx={{ mt: 2 }} alignItems="left">
             <Grid item xs={6}>
                 <Card>
                     <CardContent sx={{ ml: 2 }} style={{ height: 200 }}>
-                        <Typography>CANDIDATAS POR DEPARTAMENTO MUJERES</Typography>
+                        <Typography>CANDIDATAS POR DEPARTAMENTO</Typography>
                         {dptos1.map(
                             dpto => <div style={{ display: 'flex', justifyContent: 'left', marginTop: 2 }}>
                                 <li>{dpto.name}: {dpto.perc}%
@@ -311,10 +307,10 @@ const AdminCandidatosComponent = () => {
             <Grid item xs={6}>
                 <Card>
                     <CardContent sx={{ ml: 2 }} style={{ height: 200 }}>
-                        <Typography>MUJERES SELECCIONADAS POR DEPARTAMENTO</Typography>
-                        {dptos2.map(
-                            dpto => <div style={{ display: 'flex', justifyContent: 'left', marginTop: 2 }}>
-                                <li>{dpto.name}: {dpto.perc}%</li>
+                        <Typography>CANDIDATAS POR SELECCIONADOR</Typography>
+                        {m_reclu.map(
+                            mReclu => <div style={{ display: 'flex', justifyContent: 'left', marginTop: 2 }}>
+                                <li>{mReclu.name}: {mReclu.mujeres > 0 ? ((mReclu.mujeres * 100) / (mReclu.mujeres + mReclu.hombres)).toFixed(0) : "0"}%</li>
                             </div>
                         )}
                     </CardContent>
@@ -326,7 +322,36 @@ const AdminCandidatosComponent = () => {
 
     }
 
+    function m_byReclu() {
+        return <Grid container spacing={2} sx={{ mt: 2 }} alignItems="left">
+            <Grid item xs={6}>
+                <Card>
+                    <CardContent sx={{ ml: 2 }} style={{ height: 200 }}>
+                        <Typography>SELECCIONADAS POR DEPARTAMENTO</Typography>
+                        {dptos2.map(
+                            dpto => <div style={{ display: 'flex', justifyContent: 'left', marginTop: 2 }}>
+                                <li style={{color : "blue"}}><a style={{color: "black"}}>{dpto.name}: {dpto.perc}%</a></li>
+                            </div>
+                        )}
+                    </CardContent>
+                </Card>
+            </Grid>
+            <Grid item xs={6}>
+                <Card>
+                    <CardContent sx={{ ml: 2 }} style={{ height: 200 }}>
+                        <Typography>SELECCIONADAS POR RECLUTADOR</Typography>
+                        {ms_reclu.map(
+                            mReclu => <div style={{ display: 'flex', justifyContent: 'left', marginTop: 2 }}>
+                                <li>{mReclu.name}: {mReclu.mujeres > 0 ? ((mReclu.mujeres * 100) / (mReclu.mujeres + mReclu.hombres)).toFixed(0) : "0"}%</li>
+                            </div>
+                        )}
+                    </CardContent>
+                </Card>
 
+
+            </Grid>
+        </Grid >
+    }
 
     return (
         <div>
@@ -406,6 +431,10 @@ const AdminCandidatosComponent = () => {
                 {/* <h1>CANDIDATAS POR DEPARTAMENTO MUJERES // SELECCIONADAS POR DEPARTAMENTO</h1> */}
                 {
                     m_byDpto()
+                }
+
+                {
+                    m_byReclu()
                 }
 
 

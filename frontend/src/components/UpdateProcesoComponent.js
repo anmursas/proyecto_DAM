@@ -585,6 +585,8 @@ const UpdateProcesoComponent = () => {
             setCt_id(response.data.elCentroTrabajo.id)
             setReclu_id(response.data.elReclutador.id)
             setFechaInicio(response.data.fechaInicio)
+            console.log(response.data.fechaInicio)
+            console.log(response.data.fechaFin)
             setFechaFin(response.data.fechaFin)
             setVinc_id(response.data.laVinculacion.id)
             setPuesto_id(response.data.elPuesto.id)
@@ -657,6 +659,8 @@ const UpdateProcesoComponent = () => {
 
 
     useEffect(() => {
+        console.log(fechaInicio)
+        console.log(fechaFin)
         setMessageError("")
         if (fechaInicio > fechaFin) {
             setMessageError("ERROR FECHA INICIO DEBE SER MENOR QUE FECHA FIN")

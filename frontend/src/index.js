@@ -5,6 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 document.cookie = `referral_key=hello;max-age=604800;domain=example.com`
+document.title = "CPS"
 
 ReactDOM.render(
   <React.StrictMode>
