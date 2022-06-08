@@ -30,7 +30,7 @@ const Profile = () => {
     }, []);
 
     return (
-        <Paper sx={{ml: 70  }} style={{width:300}} >
+        <Paper >
             <header>
                 <h3>PERFIL DE USUARIO</h3>
             </header>
