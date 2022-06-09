@@ -1,21 +1,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import Box from '@mui/material/Box';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TablePagination from '@mui/material/TablePagination';
-import TableRow from '@mui/material/TableRow';
-import TableSortLabel from '@mui/material/TableSortLabel';
-import Paper from '@mui/material/Paper';
 import { visuallyHidden } from '@mui/utils';
 import ProcesoService from '../services/ProcesoService';
 import { useState, useEffect } from 'react'
-import { Button, Input, Stack, TextField } from '@mui/material';
 import { useNavigate } from "react-router-dom";
-import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, Input, Stack, TextField, Box, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel, Paper } from '@mui/material';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import ValuesService from '../services/ValuesService';
@@ -334,7 +323,7 @@ export default function ListProcesoComponent() {
               renderInput={(params) => <TextField  {...params} style={{ backgroundColor: 'white' }} />}
             />
 
-            <Button  onClick={(e) => filtrarFechas()}> Buscar </Button>
+            <Button onClick={(e) => filtrarFechas()}> Buscar </Button>
           </Stack>
         </LocalizationProvider>
 
@@ -383,7 +372,7 @@ export default function ListProcesoComponent() {
                       <TableCell align="left">{row.vincu}</TableCell>
                       <TableCell align="left">{row.puesto}</TableCell>
                       <TableCell align="left">{row.jl}, {row.jl_hs}H/S</TableCell>
-                      
+
                       <TableCell>
                         <Stack spacing={-2} direction="row">
                           <Button onClick={() => handleEdit(row.id)}  >

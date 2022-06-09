@@ -8,12 +8,6 @@ const Profile = () => {
 
     const navigate = useNavigate();
 
-    // Variables del usuario
-    const [username, setUsername] = useState("");
-    const [email, setMail] = useState("");
-    const [id, setId] = useState("");
-    const [roles, setRoles] = useState([]);
-
     const [user, setUser] = useState("")
 
     useEffect(() => {

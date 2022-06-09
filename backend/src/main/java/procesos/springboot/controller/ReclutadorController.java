@@ -85,8 +85,6 @@ public class ReclutadorController {
 
     @GetMapping("/m")
     public String getCandisById() throws JSONException {
-
-
         JSONArray ja = new JSONArray();
 
         List<Reclutador> reclutadors = reclutadorRepository.findAll();
