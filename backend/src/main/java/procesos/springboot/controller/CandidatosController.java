@@ -58,7 +58,6 @@ public class CandidatosController {
 
         for (ProcesoCandidatos pc : pcs) {
             if (Objects.equals(pc.getCandidatos().getId(), id)) {
-                System.out.println(id);
                 procesoCandidatosReposotory.deleteById(pc.getId());
             }
 

@@ -98,7 +98,6 @@ const AddProcesoComponent = () => {
 
         ValuesService.getAllPuestos().then((response) => {
             setPuestos(response.data)
-            console.log(response.data)
         }).catch(error => {
             console.log(error)
             setOpen(true)
@@ -372,7 +371,7 @@ const AddProcesoComponent = () => {
                     <Grid item xs>
                         <Card >
                             <CardContent style={{ height: 300 }}>
-                                <h1 style={{ fontSize: "600%", color: (percentil > 50) ? "#86dc3d" : "#f20000" }}>{percentil}%</h1>
+                                <h1 style={{ fontSize: "600%", color: (percentil > 50) ? "#86dc3d" : "#E13838" }}>{percentil}%</h1>
                             </CardContent>
                         </Card>
                     </Grid>

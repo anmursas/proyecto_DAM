@@ -5,6 +5,18 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AuthService from '../services/auth.service';
 import ValuesService from '../services/ValuesService';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import Avatar from '@mui/material/Avatar';
+import IconButton from '@mui/material/IconButton';
+import FormGroup from '@mui/material/FormGroup';
+import Checkbox from '@mui/material/Checkbox';
+import FolderIcon from '@mui/icons-material/Folder';
+import DeleteIcon from '@mui/icons-material/Delete';
+import CircleIcon from '@mui/icons-material/Circle';
 
 
 const AdminCandidatosComponent = () => {
@@ -13,10 +25,13 @@ const AdminCandidatosComponent = () => {
     const [hombres, setHombres] = useState(0)
     const [mujeres, setMujeres] = useState(0)
 
+    const [updating, setUpdating] = useState(false);
+
     // New/Update Candidato
     const [candi_name, setCandName] = useState("");
     const [candi_ape, setCandApe] = useState("");
     const [candi_sexo, setCandSex] = useState("");
+    const [candi_id, setCandiId] = useState("");
 
     const [m_reclu, setM_reclu] = useState([]);
     const [ms_reclu, setMS_reclu] = useState([]);
@@ -34,6 +49,8 @@ const AdminCandidatosComponent = () => {
     const [percs3, setPercs3] = useState(0);
     const [percs4, setPercs4] = useState(0);
     const [percs5, setPercs5] = useState(0);
+
+    const [secondary, setSecondary] = React.useState(false);
 
 
     const data = [
@@ -54,45 +71,55 @@ const AdminCandidatosComponent = () => {
     const dptos1 = [
         {
             name: "ARQUITECTURA",
-            perc: perc1
+            perc: perc1,
+            color: "#ddcc77"
         },
         {
             name: "CIVIL",
-            perc: perc2
+            perc: perc2,
+            color: "#44aa99"
         },
         {
             name: "DESARROLLO DE NEGOCIO",
-            perc: perc3
+            perc: perc3,
+            color: "#117733"
         },
         {
             name: "GESTIÓN OPERATIVA",
-            perc: perc4
+            perc: perc4,
+            color: "#332288"
         },
         {
             name: "TRANSPORTES Y MOVILIDAD",
-            perc: perc5
+            perc: perc5,
+            color: "#88ccee"
         }
     ]
     const dptos2 = [
         {
             name: "ARQUITECTURA",
-            perc: percs1
+            perc: percs1,
+            color: "#ddcc77"
         },
         {
             name: "CIVIL",
-            perc: percs2
+            perc: percs2,
+            color: "#44aa99"
         },
         {
             name: "DESARROLLO DE NEGOCIO",
-            perc: percs3
+            perc: percs3,
+            color: "#117733"
         },
         {
             name: "GESTIÓN OPERATIVA",
-            perc: percs4
+            perc: percs4,
+            color: "#332288"
         },
         {
             name: "TRANSPORTES Y MOVILIDAD",
-            perc: percs5
+            perc: percs5,
+            color: "#88ccee"
         }
     ]
 
@@ -107,10 +134,11 @@ const AdminCandidatosComponent = () => {
     }
 
     function editCandidato(id) {
+        setCandiId(id.id)
         setCandName(id.nombre)
         setCandApe(id.apellido1)
         setCandSex(id.sexo)
-
+        setUpdating(true)
         setOpen(true)
     }
 
@@ -118,6 +146,7 @@ const AdminCandidatosComponent = () => {
         setCandName("")
         setCandApe("")
         setCandSex("")
+        setUpdating(false);
         setOpen(true)
     }
 
@@ -131,11 +160,21 @@ const AdminCandidatosComponent = () => {
             apellido1: candi_ape,
             sexo: candi_sexo,
         };
-        ValuesService.createCandidato(candi).then((response) => {
-            window.location.reload(true);
-        }).catch((error) => {
-            console.log(error);
-        });
+
+        if (updating) {
+            ValuesService.updateCandidato(candi_id, candi).then((response) => {
+                window.location.reload(true);
+            }).catch(error => {
+                console.log(error)
+            })
+        } else {
+            ValuesService.createCandidato(candi).then((response) => {
+                window.location.reload(true);
+            }).catch((error) => {
+                console.log(error);
+            });
+        }
+
         setOpen(false);
     }
 
@@ -293,12 +332,20 @@ const AdminCandidatosComponent = () => {
         return <Grid container spacing={2} sx={{ mt: 2 }} alignItems="left">
             <Grid item xs={6}>
                 <Card>
-                    <CardContent sx={{ ml: 2 }} style={{ height: 200 }}>
+                    <CardContent sx={{ ml: 2 }} style={{ height: dptos1.length * 50 }}>
                         <Typography>CANDIDATAS POR DEPARTAMENTO</Typography>
                         {dptos1.map(
                             dpto => <div style={{ display: 'flex', justifyContent: 'left', marginTop: 2 }}>
-                                <li>{dpto.name}: {dpto.perc}%
-                                </li>
+                                <List>
+                                    <ListItem sx={{ padding: 0 }}>
+                                        <ListItemIcon>
+                                            <CircleIcon style={{ color: dpto.color, fontSize: 15 }} />
+                                        </ListItemIcon>
+                                        <ListItemText>
+                                            <Typography fontSize={15}><strong>{dpto.name}: {dpto.perc}%</strong></Typography>
+                                        </ListItemText>
+                                    </ListItem>
+                                </List>
                             </div>
                         )}
                     </CardContent>
@@ -306,11 +353,21 @@ const AdminCandidatosComponent = () => {
             </Grid>
             <Grid item xs={6}>
                 <Card>
-                    <CardContent sx={{ ml: 2 }} style={{ height: 200 }}>
+                    <CardContent sx={{ ml: 2 }} style={{ height: m_reclu.length * 50 }}>
                         <Typography>CANDIDATAS POR SELECCIONADOR</Typography>
                         {m_reclu.map(
                             mReclu => <div style={{ display: 'flex', justifyContent: 'left', marginTop: 2 }}>
-                                <li>{mReclu.name}: {mReclu.mujeres > 0 ? ((mReclu.mujeres * 100) / (mReclu.mujeres + mReclu.hombres)).toFixed(0) : "0"}%</li>
+                                <List>
+                                    <ListItem sx={{ padding: 0 }}>
+                                        <ListItemIcon>
+                                            <CircleIcon style={{ fontSize: 15 }} />
+                                        </ListItemIcon>
+                                        <ListItemText>
+                                            <Typography fontSize={15}><strong>{mReclu.name}: {mReclu.mujeres > 0 ? ((mReclu.mujeres * 100) / (mReclu.mujeres + mReclu.hombres)).toFixed(0) : "0"}%</strong></Typography>
+                                        </ListItemText>
+                                    </ListItem>
+                                </List>
+
                             </div>
                         )}
                     </CardContent>
@@ -326,11 +383,20 @@ const AdminCandidatosComponent = () => {
         return <Grid container spacing={2} sx={{ mt: 2 }} alignItems="left">
             <Grid item xs={6}>
                 <Card>
-                    <CardContent sx={{ ml: 2 }} style={{ height: 200 }}>
+                    <CardContent sx={{ ml: 2 }} style={{ height: dptos2.length * 50 }}>
                         <Typography>SELECCIONADAS POR DEPARTAMENTO</Typography>
                         {dptos2.map(
                             dpto => <div style={{ display: 'flex', justifyContent: 'left', marginTop: 2 }}>
-                                <li style={{color : "blue"}}><a style={{color: "black"}}>{dpto.name}: {dpto.perc}%</a></li>
+                                <List>
+                                    <ListItem sx={{ padding: 0 }}>
+                                        <ListItemIcon>
+                                            <CircleIcon style={{ color: dpto.color, fontSize: 15 }} />
+                                        </ListItemIcon>
+                                        <ListItemText>
+                                            <Typography fontSize={15}><strong>{dpto.name}: {dpto.perc}%</strong></Typography>
+                                        </ListItemText>
+                                    </ListItem>
+                                </List>
                             </div>
                         )}
                     </CardContent>
@@ -338,11 +404,20 @@ const AdminCandidatosComponent = () => {
             </Grid>
             <Grid item xs={6}>
                 <Card>
-                    <CardContent sx={{ ml: 2 }} style={{ height: 200 }}>
+                    <CardContent sx={{ ml: 2 }} style={{ height: ms_reclu.length * 50 }}>
                         <Typography>SELECCIONADAS POR RECLUTADOR</Typography>
                         {ms_reclu.map(
                             mReclu => <div style={{ display: 'flex', justifyContent: 'left', marginTop: 2 }}>
-                                <li>{mReclu.name}: {mReclu.mujeres > 0 ? ((mReclu.mujeres * 100) / (mReclu.mujeres + mReclu.hombres)).toFixed(0) : "0"}%</li>
+                                <List>
+                                    <ListItem sx={{ padding: 0 }}>
+                                        <ListItemIcon>
+                                            <CircleIcon style={{ fontSize: 15 }} />
+                                        </ListItemIcon>
+                                        <ListItemText>
+                                            <Typography fontSize={15}><strong>{mReclu.name}: {mReclu.mujeres > 0 ? ((mReclu.mujeres * 100) / (mReclu.mujeres + mReclu.hombres)).toFixed(0) : "0"}%</strong></Typography>
+                                        </ListItemText>
+                                    </ListItem>
+                                </List>
                             </div>
                         )}
                     </CardContent>
@@ -428,7 +503,6 @@ const AdminCandidatosComponent = () => {
                 {
                     percentil_()
                 }
-                {/* <h1>CANDIDATAS POR DEPARTAMENTO MUJERES // SELECCIONADAS POR DEPARTAMENTO</h1> */}
                 {
                     m_byDpto()
                 }
@@ -445,7 +519,7 @@ const AdminCandidatosComponent = () => {
             <Dialog open={open} onClose={handleClose}>
                 <DialogTitle>Candidato</DialogTitle>
                 <DialogContent>
-                    <DialogContentText>Candidato Nuevo</DialogContentText>
+                    <DialogContentText>{updating ? "ACTUALIZANDO CANDIDATO" : "NUEVO CANDIDATO"} </DialogContentText>
                     <TextField
                         autoFocus
                         margin="dense"

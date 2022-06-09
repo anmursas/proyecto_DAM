@@ -93,7 +93,6 @@ public class GetControllerTests extends AbstractTest {
         int status = mvcResult.getResponse().getStatus();
         assertEquals(200, status);
         String content = mvcResult.getResponse().getContentAsString();
-        System.out.println(content);
         // Porque no tiene nigun authorized
         assertTrue(content.isEmpty());
     }

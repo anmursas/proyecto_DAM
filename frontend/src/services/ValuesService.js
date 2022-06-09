@@ -90,7 +90,7 @@ class ValuesService {
     }
 
     updateCandidato(id, candidato) {
-        return axios.put(API_URL + '/v1/candidatos/' + id + candidato, { headers: authHeader() })
+        return axios.put(API_URL + '/v1/candidatos/' + id, candidato, { headers: authHeader() })
     }
 
     getCandidatosPorDepartamento(id) {
@@ -102,7 +102,7 @@ class ValuesService {
     }
 
     getProcesosFiltrados(dates) {
-        return axios.post("http://localhost:8090/api/v1/proceso/date", dates)
+        return axios.post("http://localhost:8090/api/v1/proceso/date", dates, { headers: authHeader() })
     }
 
     getUserByReqyest() {

@@ -78,6 +78,51 @@ public class ProcesoController {
         return null;
     }
 
+    @PostMapping("/date")
+    public List<Proceso> findByDate(@RequestBody String dates, @NotNull HttpServletRequest request) throws ParseException {
+        List<Proceso> procesosFiltrados = new ArrayList<Proceso>();
+        String user = request.getRemoteUser();
+        String[] splitted = dates.split("\"");
+
+        String f1 = splitted[3];
+        String f2 = splitted[7];
+        String[] temp1 = f1.split("T");
+        String[] temp2 = f2.split("T");
+        String fecha1 = temp1[0];
+        String fecha2 = temp2[0];
+
+        Date date1 = Date.valueOf(fecha1);
+        Date date2 = Date.valueOf(fecha2);
+        if (!(user == null)) {
+            Reclutador r = reclutadorRepository.findByUsername(user).get();
+            Set<Role> s = r.getRoles();
+            for (Role ro : s) {
+                if (dates.isEmpty()) {
+                } else {
+                    if (ro.getName().toString() == "ROLE_ADMIN") {
+                        for (Proceso p : procesoRepository.findAll()) {
+                            if (!(p.getFechaInicio().before(date1) && p.getFechaFin().before(date1))) {
+                                if (!(p.getFechaInicio().after(date2) && p.getFechaFin().after(date2))) {
+                                    procesosFiltrados.add(p);
+                                }
+                            }
+                        }
+                    } else {
+                        for (Proceso p : procesoRepository.findByReclu(r.getId())) {
+                            if (!(p.getFechaInicio().before(date1) && p.getFechaFin().before(date1))) {
+                                if (!(p.getFechaInicio().after(date2) && p.getFechaFin().after(date2))) {
+                                    procesosFiltrados.add(p);
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
+        return procesosFiltrados;
+    }
+
     @GetMapping("{id}")
     public ResponseEntity<Proceso> getProcesoById(@PathVariable Long id, HttpServletRequest request) {
         String user = request.getRemoteUser();
@@ -124,44 +169,6 @@ public class ProcesoController {
             }
         }
         return proceso;
-    }
-
-    @PostMapping("/date")
-    public List<Proceso> findByDate(@RequestBody String dates) throws ParseException {
-        List<Proceso> procesosFiltrados = new ArrayList<Proceso>();
-        if (dates.isEmpty()) {
-
-        } else {
-            System.out.println(dates);
-
-            String[] splitted = dates.split("\"");
-
-            for (int i = 0; i < splitted.length; i++) {
-                System.out.println(splitted[i]);
-            }
-
-            String f1 = splitted[3];
-            String f2 = splitted[7];
-            String[] temp1 = f1.split("T");
-            String[] temp2 = f2.split("T");
-            String fecha1 = temp1[0];
-            String fecha2 = temp2[0];
-
-
-            Date date1 = Date.valueOf(fecha1);
-            Date date2 = Date.valueOf(fecha2);
-
-            for (Proceso p : procesoRepository.findAll()) {
-                if (!(p.getFechaInicio().before(date1) && p.getFechaFin().before(date1))) {
-                    if (!(p.getFechaInicio().after(date2) && p.getFechaFin().after(date2))) {
-                        procesosFiltrados.add(p);
-                    }
-                    ;
-                }
-            }
-        }
-
-        return procesosFiltrados;
     }
 
 
@@ -279,7 +286,6 @@ public class ProcesoController {
             if (p.getElDepartamento().getId().equals(id)) {
                 for (ProcesoCandidatos pc : p.getProcesoCandidatos()) {
                     if (pc.getCandidatos().getSexo().toString().equals("F") && pc.getEntrevistado().toString().equals("SI")) {
-                        System.out.println(pc.getEntrevistado());
                         mujeres++;
                     }
 

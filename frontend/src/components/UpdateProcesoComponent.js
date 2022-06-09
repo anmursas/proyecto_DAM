@@ -347,15 +347,7 @@ const UpdateProcesoComponent = () => {
         }
     }
 
-    function per_mujer() {
-        if (percentil > 50) {
-            return <h1 style={{ fontSize: "600%", color: "#86dc3d" }}>{percentil}%</h1>
 
-        } else {
-            return <h1 style={{ fontSize: "600%", color: "#f20000" }}>{percentil}%</h1>
-
-        }
-    }
 
     function personas_() {
         if (puesto_id) {
@@ -373,12 +365,7 @@ const UpdateProcesoComponent = () => {
                                 borderWidth={1}
                                 borderColor={{
                                     from: 'color',
-                                    modifiers: [
-                                        [
-                                            'darker',
-                                            0.2
-                                        ]
-                                    ]
+                                    modifiers: [['darker', 0.2]]
                                 }}
                                 colors={{ datum: 'data.color' }}
                                 arcLinkLabelsSkipAngle={10}
@@ -389,26 +376,11 @@ const UpdateProcesoComponent = () => {
                                 arcLabelsSkipAngle={10}
                                 arcLabelsTextColor={{
                                     from: 'color',
-                                    modifiers: [
-                                        [
-                                            'darker',
-                                            2
-                                        ]
-                                    ]
+                                    modifiers: [['darker', 2]]
                                 }}
                                 fill={[
-                                    {
-                                        match: {
-                                            id: 'hombres'
-                                        },
-                                        id: 'hombres'
-                                    },
-                                    {
-                                        match: {
-                                            id: 'mujeres'
-                                        },
-                                        id: 'mujeres'
-                                    }
+                                    { match: { id: 'hombres' }, id: 'hombres' },
+                                    { match: { id: 'mujeres' }, id: 'mujeres' }
                                 ]}
                                 legends={[
                                     {
@@ -425,14 +397,7 @@ const UpdateProcesoComponent = () => {
                                         itemOpacity: 1,
                                         symbolSize: 18,
                                         symbolShape: 'circle',
-                                        effects: [
-                                            {
-                                                on: 'hover',
-                                                style: {
-                                                    itemTextColor: '#000'
-                                                }
-                                            }
-                                        ]
+                                        effects: [{ on: 'hover', style: { itemTextColor: '#000' } }]
                                     }
                                 ]}
                             />
@@ -444,22 +409,17 @@ const UpdateProcesoComponent = () => {
                     <Card >
                         <CardContent style={{ height: 300 }}>
 
-                            {
-                                per_mujer()
-                            }
+                            <h1 style={{ fontSize: "600%", color: (percentil > 50) ? "#86dc3d" : "#E13838" }}>{percentil}%</h1>
+
 
 
                         </CardContent>
                     </Card>
                 </Grid>
-
             </Grid >
-
-
         } else {
             return
         }
-
     }
 
     function updateProceso(e) {
@@ -585,8 +545,6 @@ const UpdateProcesoComponent = () => {
             setCt_id(response.data.elCentroTrabajo.id)
             setReclu_id(response.data.elReclutador.id)
             setFechaInicio(response.data.fechaInicio)
-            console.log(response.data.fechaInicio)
-            console.log(response.data.fechaFin)
             setFechaFin(response.data.fechaFin)
             setVinc_id(response.data.laVinculacion.id)
             setPuesto_id(response.data.elPuesto.id)
@@ -659,8 +617,6 @@ const UpdateProcesoComponent = () => {
 
 
     useEffect(() => {
-        console.log(fechaInicio)
-        console.log(fechaFin)
         setMessageError("")
         if (fechaInicio > fechaFin) {
             setMessageError("ERROR FECHA INICIO DEBE SER MENOR QUE FECHA FIN")

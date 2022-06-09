@@ -12,15 +12,11 @@ import java.util.Optional;
 
 @SpringBootApplication
 public class SpringbootBackendApplication extends SpringBootServletInitializer {
-
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
         return application.sources(SpringbootBackendApplication.class);
     }
-
     public static void main(String[] args) {
         SpringApplication.run(SpringbootBackendApplication.class, args);
     }
-
-
 }

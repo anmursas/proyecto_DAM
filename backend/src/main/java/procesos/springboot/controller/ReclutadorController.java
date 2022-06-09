@@ -94,7 +94,7 @@ public class ReclutadorController {
             String nombre;
             int hombres = 0;
             int mujeres = 0;
-            nombre = r.getNombre() + ", " + r.getApellidos();
+            nombre = r.getNombre() + " " + r.getApellidos();
             for (Proceso p : r.getLosProcesos()) {
                 for (ProcesoCandidatos pc : p.getProcesoCandidatos()) {
                     if (Objects.equals(pc.getCandidatos().getSexo(), "M")) {
@@ -115,7 +115,6 @@ public class ReclutadorController {
             mujeres = 0;
         }
 
-        System.out.println(ja);
 
         return ja.toString();
     }
@@ -131,7 +130,7 @@ public class ReclutadorController {
             String nombre;
             int hombres = 0;
             int mujeres = 0;
-            nombre = r.getNombre() + ", " + r.getApellidos();
+            nombre = r.getNombre() + " " + r.getApellidos();
             for (Proceso p : r.getLosProcesos()) {
                 for (ProcesoCandidatos pc : p.getProcesoCandidatos()) {
                     if (Objects.equals(pc.getCandidatos().getSexo(), "M") && Objects.equals(pc.getEntrevistado().toString(), "SI")) {
@@ -151,9 +150,6 @@ public class ReclutadorController {
             hombres = 0;
             mujeres = 0;
         }
-
-        System.out.println(ja);
-
         return ja.toString();
     }
 

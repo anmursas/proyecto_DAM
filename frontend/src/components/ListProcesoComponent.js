@@ -208,10 +208,8 @@ export default function ListProcesoComponent() {
     }
 
 
-    console.log(fecha)
 
     ValuesService.getProcesosFiltrados(fecha).then((response) => {
-      console.log(response.data)
       setRawRows(response.data);
     }).catch(error => {
       console.log(error)
@@ -260,7 +258,6 @@ export default function ListProcesoComponent() {
 
   // Borrar proceso
   const deleteProceso = (procesoId) => {
-    console.log(procesoId)
     ProcesoService.deleteProceso(procesoId).then(() => {
       ProcesoService.getAllProcesos().then((response) => {
         setRawRows(response.data)

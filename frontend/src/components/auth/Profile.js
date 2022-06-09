@@ -23,7 +23,6 @@ const Profile = () => {
         } else {
             ValuesService.getUserByReqyest().then((response) => {
                 setUser(response.data)
-                console.log(response.data)
             })
 
         }
