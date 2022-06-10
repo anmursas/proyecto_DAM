@@ -20,7 +20,7 @@ const Profile = () => {
             })
 
         }
-    }, []);
+    }, [navigate]);
 
     return (
         <Paper >

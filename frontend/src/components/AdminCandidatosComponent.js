@@ -1,12 +1,11 @@
-import { Button, Card, CardContent, ListItemIcon, List, ListItemText, Dialog, DialogContent, RadioGroup, FormControlLabel, Radio, DialogActions, TextField, DialogContentText, DialogTitle, Grid, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Button, Card, CardContent, ListItem, ListItemIcon, List, ListItemText, Dialog, DialogContent, RadioGroup, FormControlLabel, Radio, DialogActions, TextField, DialogContentText, DialogTitle, Grid, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import { ResponsivePie } from '@nivo/pie';
-import React, { useState, useEffect } from 'react';
+import CircleIcon from '@mui/icons-material/Circle';
 import { useNavigate } from 'react-router-dom';
 import AuthService from '../services/auth.service';
 import ValuesService from '../services/ValuesService';
-import ListItem from '@mui/material/ListItem';
-import CircleIcon from '@mui/icons-material/Circle';
 
 
 const AdminCandidatosComponent = () => {
@@ -40,7 +39,6 @@ const AdminCandidatosComponent = () => {
     const [percs4, setPercs4] = useState(0);
     const [percs5, setPercs5] = useState(0);
 
-    const [secondary, setSecondary] = React.useState(false);
 
 
     const data = [

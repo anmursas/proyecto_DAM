@@ -1,16 +1,8 @@
 import React, { useState, useEffect } from "react";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import Menu from "@mui/material/Menu";
+import { FormGroup, MenuItem, Button, AppBar, Box, Toolbar, IconButton, Typography, Menu } from "@mui/material";
 
-import Button from "@mui/material/Button";
-import MenuItem from "@mui/material/MenuItem";
 import logo from "../resources/logo.png";
 import { Settings } from "@mui/icons-material";
-import { FormGroup } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import ValuesService from "../services/ValuesService";
 import AuthService from "../services/auth.service";

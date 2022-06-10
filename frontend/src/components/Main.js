@@ -24,7 +24,6 @@ const theme = createTheme();
 
 export default function Checkout() {
     const [activeStep, setActiveStep] = useState(0);
-    const [currentUser, setCurrentUser] = useState("");
     const [admin, setAdmin] = useState(false);
     let navigate = useNavigate();
 

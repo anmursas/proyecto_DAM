@@ -15,7 +15,6 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
   const [nombre, setNombre] = useState("");
   const [apellidos, setApellidos] = useState("");
-  const [role, setRole] = useState(["user"])
 
   // Variables de componente
   const [repeatedPassword, setrepeatedPassword] = useState("");
@@ -29,7 +28,7 @@ const SignUp = () => {
     apellidos: apellidos,
     email: email,
     password: password,
-    role: role
+    role: ["user"]
   }
 
   // Envía petición POST a la API para dar de alta un nuevo usuario 

@@ -2,9 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate, useParams } from "react-router-dom";
 import ProcesoService from '../services/ProcesoService';
 import ValuesService from '../services/ValuesService';
-import { FormControl, InputLabel, Select, MenuItem, Button, Container, Stack, Autocomplete, TableCell, TableBody, TableRow, Table, TableHead, Dialog, DialogTitle, DialogContent, DialogContentText, RadioGroup, FormControlLabel, DialogActions, Radio, TableContainer, Grid, Alert } from '@mui/material';
-import TextField from '@mui/material/TextField';
-import Paper from '@mui/material/Paper';
+import { TextField, Paper, FormControl, InputLabel, Select, MenuItem, Button, Container, Stack, Autocomplete, TableCell, TableBody, TableRow, Table, TableHead, Dialog, DialogTitle, DialogContent, DialogContentText, RadioGroup, FormControlLabel, DialogActions, Radio, TableContainer, Grid, Alert } from '@mui/material';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import Card from "@material-ui/core/Card";
