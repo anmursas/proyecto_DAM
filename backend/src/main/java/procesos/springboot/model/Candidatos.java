@@ -34,4 +34,9 @@ public class Candidatos {
     @OneToMany(mappedBy = "candidatos")
     private Set<ProcesoCandidatos> procesoCandidatos = new HashSet<ProcesoCandidatos>();
 
+    public Candidatos(String nombre, String ape, String sexo) {
+        this.nombre = nombre;
+        this.apellido1 = ape;
+        this.sexo = sexo;
+    }
 }

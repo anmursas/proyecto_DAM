@@ -10,11 +10,11 @@ class ProcesoService {
     }
 
     createProceso(proceso) {
-        return axios.post(PRO_API_BASE_URL, proceso)
+        return axios.post(PRO_API_BASE_URL, proceso, { headers: authHeader() })
     }
 
     deleteProceso(procesoId) {
-        return axios.delete(PRO_API_BASE_URL + '/' + procesoId)
+        return axios.delete(PRO_API_BASE_URL + '/' + procesoId, { headers: authHeader() })
     }
 
     updateProceso(procesoId, proceso) {

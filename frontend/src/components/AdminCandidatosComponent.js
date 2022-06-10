@@ -315,6 +315,8 @@ const AdminCandidatosComponent = () => {
 
         </Grid >
     }
+
+
     function m_byDpto() {
 
         return <Grid container spacing={2} sx={{ mt: 2 }} alignItems="left">
@@ -341,36 +343,6 @@ const AdminCandidatosComponent = () => {
             </Grid>
             <Grid item xs={6}>
                 <Card>
-                    <CardContent sx={{ ml: 2 }} style={{ height: m_reclu.length * 50 }}>
-                        <Typography>CANDIDATAS POR SELECCIONADOR</Typography>
-                        {m_reclu.map(
-                            mReclu => <div style={{ display: 'flex', justifyContent: 'left', marginTop: 2 }}>
-                                <List>
-                                    <ListItem sx={{ padding: 0 }}>
-                                        <ListItemIcon>
-                                            <CircleIcon style={{ fontSize: 15 }} />
-                                        </ListItemIcon>
-                                        <ListItemText>
-                                            <Typography fontSize={15}><strong>{mReclu.name}: {mReclu.mujeres > 0 ? ((mReclu.mujeres * 100) / (mReclu.mujeres + mReclu.hombres)).toFixed(0) : "0"}%</strong></Typography>
-                                        </ListItemText>
-                                    </ListItem>
-                                </List>
-
-                            </div>
-                        )}
-                    </CardContent>
-                </Card>
-
-
-            </Grid>
-        </Grid >
-
-    }
-
-    function m_byReclu() {
-        return <Grid container spacing={2} sx={{ mt: 2 }} alignItems="left">
-            <Grid item xs={6}>
-                <Card>
                     <CardContent sx={{ ml: 2 }} style={{ height: dptos2.length * 50 }}>
                         <Typography>SELECCIONADAS POR DEPARTAMENTO</Typography>
                         {dptos2.map(
@@ -390,28 +362,63 @@ const AdminCandidatosComponent = () => {
                     </CardContent>
                 </Card>
             </Grid>
+
+
+
+        </Grid >
+
+    }
+
+    function m_byReclu() {
+        return <Grid container spacing={2} sx={{ mt: 2 }} alignItems="left">
+            <Grid item xs={6}>
+                <Card>
+                    <CardContent sx={{ ml: 2 }} style={{ height: m_reclu.length * 50 }}>
+                        <Typography>CANDIDATAS POR RECLUTADOR</Typography>
+                        {m_reclu.map(
+                            mReclu => {
+                                if (mReclu.name !== "CLAUDIA PENYA")
+                                    return <div style={{ display: 'flex', justifyContent: 'left', marginTop: 2 }}>
+                                        <List>
+                                            <ListItem sx={{ padding: 0 }}>
+                                                <ListItemIcon>
+                                                    <CircleIcon style={{ fontSize: 15 }} />
+                                                </ListItemIcon>
+                                                <ListItemText>
+                                                    <Typography fontSize={15}><strong>{mReclu.name}: {mReclu.mujeres > 0 ? ((mReclu.mujeres * 100) / (mReclu.mujeres + mReclu.hombres)).toFixed(0) : "0"}%</strong></Typography>
+                                                </ListItemText>
+                                            </ListItem>
+                                        </List>
+
+                                    </div>
+                            }
+                        )}
+                    </CardContent>
+                </Card>
+            </Grid>
             <Grid item xs={6}>
                 <Card>
                     <CardContent sx={{ ml: 2 }} style={{ height: ms_reclu.length * 50 }}>
                         <Typography>SELECCIONADAS POR RECLUTADOR</Typography>
                         {ms_reclu.map(
-                            mReclu => <div style={{ display: 'flex', justifyContent: 'left', marginTop: 2 }}>
-                                <List>
-                                    <ListItem sx={{ padding: 0 }}>
-                                        <ListItemIcon>
-                                            <CircleIcon style={{ fontSize: 15 }} />
-                                        </ListItemIcon>
-                                        <ListItemText>
-                                            <Typography fontSize={15}><strong>{mReclu.name}: {mReclu.mujeres > 0 ? ((mReclu.mujeres * 100) / (mReclu.mujeres + mReclu.hombres)).toFixed(0) : "0"}%</strong></Typography>
-                                        </ListItemText>
-                                    </ListItem>
-                                </List>
-                            </div>
+                            mReclu => {
+                                if (mReclu.name !== "CLAUDIA PENYA")
+                                    return <div style={{ display: 'flex', justifyContent: 'left', marginTop: 2 }}>
+                                        <List>
+                                            <ListItem sx={{ padding: 0 }}>
+                                                <ListItemIcon>
+                                                    <CircleIcon style={{ fontSize: 15 }} />
+                                                </ListItemIcon>
+                                                <ListItemText>
+                                                    <Typography fontSize={15}><strong>{mReclu.name}: {mReclu.mujeres > 0 ? ((mReclu.mujeres * 100) / (mReclu.mujeres + mReclu.hombres)).toFixed(0) : "0"}%</strong></Typography>
+                                                </ListItemText>
+                                            </ListItem>
+                                        </List>
+                                    </div>
+                            }
                         )}
                     </CardContent>
                 </Card>
-
-
             </Grid>
         </Grid >
     }

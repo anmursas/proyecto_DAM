@@ -90,7 +90,7 @@ const headCells = [
     id: 'reclu_nom',
     numeric: false,
     disablePadding: false,
-    label: 'SELECCIONADOR',
+    label: 'RECLUTADOR',
   },
   {
     id: 'fechaI',

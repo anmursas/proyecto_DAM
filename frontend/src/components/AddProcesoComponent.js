@@ -488,7 +488,7 @@ const AddProcesoComponent = () => {
                                 <div >
 
                                     <FormControl fullWidth margin='normal' style={{ backgroundColor: 'white' }} >
-                                        <InputLabel required error={!dpto_id} id="demo-simple-select-label">Departamento</InputLabel>
+                                        <InputLabel required error={!dpto_id} id="demo-simple-select-label">Departamento:</InputLabel>
                                         <Select required error={!dpto_id} labelId="demo-simple-select-label" id="demo-simple-select" label="Departamento" onChange={(e) => { setDpto_id(e.target.value) }} value={dpto_id} >
                                             {dptos.map(
                                                 dpto => <MenuItem divider key={dpto.id} value={dpto.id}>{dpto.nombre}</MenuItem>
@@ -514,7 +514,7 @@ const AddProcesoComponent = () => {
                                             }
                                             )}
                                         </Select>
-                                    </FormControl>
+                                    </FormControl> 
 
                                     <FormControl >
                                         <LocalizationProvider dateAdapter={AdapterDateFns} dateFormat>
