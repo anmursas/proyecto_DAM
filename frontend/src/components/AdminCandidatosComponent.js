@@ -558,7 +558,7 @@ const AdminCandidatosComponent = () => {
                         disabled={!(candi_name && candi_ape && candi_sexo)}
                         onClick={handleSubmit}
                     >
-                        Crear
+                        {updating ? "ACTUALIZAR" : "CREAR"}
                     </Button>
                 </DialogActions>
             </Dialog>
